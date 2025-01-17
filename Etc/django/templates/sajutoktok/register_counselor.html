@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="bg-light p-0">
+                <div class="container d-flex flex-column">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <div class="col-12 col-lg-8">
+
+                            <!-- goback -->
+                            <a class="small" href="javascript: window.location.href = '/login';">
+                                < 로그인 페이지로
+                            </a>
+
+                            <div class="card p-4">
+
+                                <!-- title -->
+                                <div class="my-4 text-center">
+                                    <h2 class="font-weight-normal mb-0">상담사 등록</h2>
+                                    <p class="mb-0">
+                                        상담사 등록을 위해 아래 정보를 입력해주세요.
+                                    </p>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>이메일</label>
+                                    <input class="form-control" id="id" value="{{email}}" readonly>
+                                </div>
+
+                                <br>
+
+                                <div class="form-group">
+                                    <label>이름</label>
+                                    <input class="form-control" id="name" placeholder="이름(실명)을 입력해주세요.">
+                                </div>
+                                <div class="form-group"></div>
+                                    <label>연락처</label>
+                                    <input class="form-control" id="tel" placeholder="연락처를 입력해주세요.">
+                                </div>
+                                <p>
+                                    * 상담사 등록 신청 시 정보 확인 후 상담사 등록 안내 메일을 발송해드립니다.
+                                </p>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-12 center">
+                                        <button type="button" onclick="tryRegister();" class="butn style-one fill d-block mt-4 mb-0 bg-primary col-12 col-lg-2">
+                                            신청하기
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var email = '{{email}}';
+            var code = '{{code}}';
+
+            // elements
+            const nameInput = document.getElementById('name');
+            const telInput = document.getElementById('tel');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            tryRegister = async () => {
+                var name = nameInput.value;
+                var tel = telInput.value;
+
+                if (name === '' || tel === '') {
+                        Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">내용 입력</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        이름과 연락처를 입력해주세요.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `error`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        });
+                        return;
+                    }
+
+                await Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">상담사 등록</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                입력하신 정보대로 상담사 등록을 신청할까요?<br>
+                                상담사 등록 신청 시 정보 확인 후 상담사 등록 안내 메일을 발송해드립니다.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `info`,
+                    showConfirmButton: true,
+                    confirmButtonText: `신청하기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        var formData = new FormData();
+                        formData.append('id', email);
+                        formData.append('name', name);
+                        formData.append('tel', tel);
+                        await fetch('/api/request_counselor_register', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        }).then(response => response.json())
+                        .then(async (data) => {
+                            var success = data["success"];
+
+                            if (success == 'y') {
+                                await Swal.fire({
+                                    html: `
+                                    <div>
+                                        <div class="text-center py-4">
+                                            <h1 class="text-dark">상담사 등록</h1>
+                                        </div>
+                                        <diV class="text-start">
+                                            <p class="text-secondary">
+                                                상담사 등록 신청이 완료되었습니다.<br>
+                                                곧 상담사 등록 안내 메일을 발송해드리겠습니다. 감사합니다.
+                                            </p>
+                                        </div>
+                                    </div>`,
+                                    icon: `success`,
+                                    showConfirmButton: true,
+                                    confirmButtonText: `확인`,
+                                    showCancelButton: false,
+                                    cancelButtonText: ``
+                                }).then(() => {
+                                    document.location.href = '/';
+                                });
+                            } else {
+                                await Swal.fire({
+                                    html: `
+                                    <div>
+                                        <div class="text-center py-4">
+                                            <h1 class="text-dark">상담사 등록</h1>
+                                        </div>
+                                        <diV class="text-start">
+                                            <p class="text-secondary">
+                                                상담사 등록 신청에 실패했습니다.<br>
+                                                다시 시도해주세요.
+                                            </p>
+                                        </div>
+                                    </div>`,
+                                    icon: `error`,
+                                    showConfirmButton: true,
+                                    confirmButtonText: `확인`,
+                                    showCancelButton: false,
+                                    cancelButtonText: ``
+                                });
+                            }
+                        });
+                    }
+                })
+            }
+
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                        <div style="display: inline-block; text-align: left;">
+                            <a class="small" href="javascript: window.location.href='/supervisor';">
+                                < 관리자 페이지로
+                            </a>
+                        </div>
+                        <div style="display: inline-block; text-align: right;">
+                            <a class="small" href="javascript: syncCounselors();">
+                                <i class="fa-solid fa-rotate"></i> 상담가 동기화
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            상담가 계정들
+                        </h5>
+                        <small>
+                            사주톡톡의 상담가 계정 연결을 관리합니다.<br>
+                            기본 상담가 아이디 및 비밀번호: 상담가 번호
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="row">
+                            {% if counselors|length < 1 %}
+                            <p class="small">
+                                현재 등록된 상담가가 없습니다.. 동기화를 먼저 해주세요.
+                            </p>
+                            {% endif %}
+                            {% for counselor in counselors %}
+                            <div class="w-100 my-2 pb-3">
+                                <div class="mb-4" style="display: flex; cursor: pointer;" onclick="document.location.href='/supervisor_counselor?id={{counselor.id}}';">
+                                    <div style="display: inline-block; text-align: left;" class="me-4">
+                                        <div class="shadow" style="max-width: 200px; width: 27vw; max-height: 200px; height: 27vw; border-radius: 50%; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                    </div>
+                                    <div style="display: inline-block;">
+                                        <!-- status -->
+                                        {% if counselor.status == 'offline' %}
+                                        <span class="badge bg-secondary">상태: 오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+                                        {% elif counselor.status == 'online' %}
+                                        <span class="badge bg-primary">상태: 온라인 <i class="fa-solid fa-headset"></i></span>
+                                        {% elif counselor.status == 'hidden' %}
+                                        <span class="badge bg-danger">상태: 비활성화 <i class="fa-solid fa-eye-slash"></i></span>
+                                        {% elif counselor.status == 'deleted' %}
+                                        <span class="badge bg-danger">상태: 삭제됨 <i class="fa-solid fa-trash"></i></span>
+                                        {% endif %}
+
+                                        <!-- info -->
+                                        <p class="small mt-4 mb-0">
+                                            CP_CODE:{{counselor.cp_code}} | 
+                                            SERVICE_NUMBER:{{counselor.service_number}} | 
+                                            ID: {{counselor.id}}
+                                        </p>
+                                        <p class="small mt-2 mb-0">
+                                            {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                                            상담 서비스가 없습니다.
+                                            {% endif %}
+                                            {% for service in counselor.services %}
+                                            {% if service == 'saju' %}
+                                            # 사주 
+                                            {% elif service == 'taro' %}
+                                            # 타로 
+                                            {% elif service == 'jum' %}
+                                            # 신점 
+                                            {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                        <span>
+                                            <span class="h5 me-2">
+                                                {{counselor.nickname}}<br>
+                                            </span>
+                                            <small>
+                                                <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> <b><span class="price">{{counselor.price}}</span>P</b> (30초)
+                                            </small>
+                                        </span>
+                                        <p class="text-dark mt-2">
+                                            {{counselor.introduce}}
+                                        </p>
+                                        <p class="small m-0 mt-2">
+                                            연락처:{{counselor.tel}}
+                                        </p>
+                                        <p class="text-dark">
+                                            {{counselor.introduce}}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p class="small">
+                                    <i class="fa-solid fa-comment"></i> 대화:{{counselor.chats_count}} | 
+                                    <i class="fa-solid fa-message"></i> 리뷰:{{counselor.reviews_count}} | 
+                                    <i class="fa-solid fa-heart"></i> 찜:{{counselor.likes_count}} | 
+                                    <i class="fa-regular fa-note-sticky"></i> 게시글:{{counselor.posts_count}}
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // fumctions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            syncCounselors = async () => {
+                Swal.fire({
+                    html: `
+                    <div class="mt-4">
+                        <div class="text-center pb-4">
+                            <h1 class="text-dark">CP 코드</h1>
+                        </div>
+                        <diV class="text-start">
+                            <div class="form-group">
+                                <label for="cp_code">CP 코드</label>
+                                <input type="text" id="cp_code" class="form-control" value="133" />
+                            </div>
+                            <div class="form-group">
+                                <label for="service_number">서비스 번호</label>
+                                <input type="text" id="service_number" class="form-control" value="3005955" />
+                                <small>
+                                    동기화할 상담가들의 CP 코드와 서비스 번호를 입력해주세요.<br>
+                                    이미 동기화된 상담가들은 다시 동기화되지 않습니다.
+                                </small>
+                            </div>
+                        </div>
+                    </div>`,
+                    icon: ``,
+                    showConfirmButton: true,
+                    confirmButtonText: `동기화하기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        var cp_code = document.getElementById('cp_code').value;
+                        var service_number = document.getElementById('service_number').value;
+                        await fetch(`/api/sync_counselors_from_060?cp_code=${cp_code}&service_number=${service_number}`)
+                        .then(() => window.location.reload());
+                    }
+                });
+            }
+        </script>
+
+    </body>
+
+</html>

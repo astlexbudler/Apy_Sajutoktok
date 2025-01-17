@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, account-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        < 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            사용자 계정
+                        </h5>
+                        <small>
+                            내 프로필 정보를 확인하고 수정합니다.<br>
+                            계정의 활동 내역을 확인합니다.
+                        </small>
+                    </div>
+
+                    <!-- profile -->
+                    <div class="my-4">
+                        <div class="row">
+
+                            <div class="col-12 mt-2">
+                                <div class="account-sidebar">
+                                    <div class="account-widget personal-data">
+
+                                        <!-- title -->
+                                        <div class="mt-2 mb-5">
+                                            <h6>프로필</h6>
+                                        </div>
+
+                                        <!-- detail -->
+                                        <div class="my-4">
+                                            <a href="javascript: new bootstrap.Modal(accountNicknameRewriteModal).show();">
+                                                <span class="h5">{{account.nickname}}</span> <small><i class='fa fa-pen'></i></small><br>
+                                            </a>
+                                            <p class="small">
+                                                <a href="javascript: new bootstrap.Modal(accountTelRewriteModal).show();">
+                                                    연락처: 
+                                                    {% if account.tel == '' %}
+                                                    등록된 연락처 정보가 없습니다. <i class='fa fa-pen'></i><br>
+                                                    {% else %}
+                                                    {{account.tel}} <i class='fa fa-pen'></i><br>
+                                                    {% endif %}
+                                                </a>
+                                                이메일: {{account.id}}
+                                            </p>
+
+                                            <div class="mt-3">
+                                                <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> 
+                                                <span class="text-danger h6">
+                                                    <span class="price">{{account.point}}</span> 포인트
+                                                </span>
+                                            </div>
+
+                                        </div>
+
+                                        <!-- buttons -->
+                                        <div class="my-4 py-4 border-bottom">
+                                            <a href="/chats" class="btn btn-primary me-2">
+                                                <i class="fa fa-comments"></i> 대화 내역
+                                            </a>
+                                        </div>
+
+                                        <!-- buttons -->
+                                        <div class="my-4">
+
+                                            <!-- search -->
+                                            <div class="my-4">
+                                                <h6>
+                                                    계정 삭제
+                                                </h6>
+                                                <div>
+                                                    <a href="javascript: deleteAccount();" class="btn btn-danger">
+                                                        <i class="fa fa-xmark"></i> 계정 삭제
+                                                    </a>
+                                                </div>
+                                                <small>
+                                                    계정 삭제 시 사용자의 모든 정보가 삭제됩니다.
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- bookmarks -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+
+                                <!-- title -->
+                                <div class="my-4">
+
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            즐겨찾기
+                                        </h6>
+                                        <small>
+                                            내가 즐겨찾기한 사주 상담가들
+                                        </small>
+                                    </div>
+
+                                    <div class="my-4">
+                                        {% if bookmarks|length < 1 %}
+                                        <p class="small">
+                                            문의 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for counselor in bookmarks %}
+                                        <div class="w-100 my-2 pb-3">
+                                            <div class="mb-4" style="display: flex; cursor: pointer;" onclick="document.location.href='/counselor?id={{counselor.id}}';">
+                                                <div style="display: inline-block; text-align: left;" class="me-4">
+                                                    <div class="shadow" style="max-width: 200px; width: 27vw; max-height: 200px; height: 27vw; border-radius: 50%; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                                </div>
+                                                <div style="display: inline-block;">
+                                                    {% if counselor.status == 'offline' %}
+                                                    <p>
+                                                        <span class="h5">{{counselor.nickname}}</span> <small>상태: <span class="text-danger">오프라인</span></small><br>
+                                                        <small>연락처:{{counselor.tel}} 이메일:{% if '@' in counselor.id %}{{counselor.id}}{% else %}이메일이 없습니다.{% endif %}</small>
+                                                    </p>
+                                                    {% else %}
+                                                    <p>
+                                                        <span class="h5">{{counselor.nickname}}</span> <span class="text-primary small">온라인(상담가능)<br></span>
+                                                    </p>
+                                                    {% endif %}
+                                                    <p class="small">
+                                                        {% for service in counselor.services %}
+                                                        {% if 'taro' == service %}
+                                                        <span class="text-dark"># 타로</span>
+                                                        {% elif 'saju' == service %}
+                                                        <span class="text-dark"># 사주</span>
+                                                        {% elif 'jum' == service %}
+                                                        <span class="text-dark"># 신점</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                        <br>
+                                                    </p>
+                                                    <p class="text-dark">
+                                                        {{counselor.intro}}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- qnas -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+
+                                <!-- title -->
+                                <div class="my-4">
+
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            1:1 문의
+                                        </h6>
+                                        <small>
+                                            사용자가 작성한 1:1 문의를 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <div class="my-4">
+                                        {% if qnas|length < 1 %}
+                                        <p class="small">
+                                            문의 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for qna in qnas %}
+                                        <div class="col-md-12 border-bottom py-3">
+                                            <a href="#" class="text-dark">
+                                                <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                    <div style="display: inline-block; text-align: left;">
+                                                        <div>
+                                                            <h6>
+                                                                {{qna.title}}
+                                                            </h6>
+                                                        </div>
+                                                    </div>
+                                                    <div style="display: inline-block; text-align: right;">
+                                                        <div>
+                                                            <a class="text-danger small" href="javascript: deletePost('{{qna.id}}');">
+                                                                <i class="fa fa-xmark"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <small class="text-secondary">
+                                                    {{qna.account.nickname}} | {{qna.dt}}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- reviews -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+                                <div class="my-4">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            리뷰
+                                        </h6>
+                                        <small>
+                                            사용자가 작성한 리뷰를 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+                                        {% if reviews|length < 1 %}
+                                        <p class="small">
+                                            리뷰 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for review in reviews %}
+                                        <div class="col-md-12 border-bottom py-3">
+                                            <a href="#" class="text-dark">
+                                                {% if review.photos|length > 0 and review.photos.0 != '' %}
+                                                <div class="post-img shadow mb-4">
+                                                    <div class="w-100" style="height: 300px; background: url('{{review.photos.0}}') center/contain no-repeat grey;"></div>
+                                                </div>
+                                                {% endif %}
+                                                <h6>
+                                                    {{review.title}}
+                                                </h6>
+                                                <small class="text-secondary">
+                                                    {{review.dt}}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- purchases -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+                                <div class="my-4">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            결제 내역
+                                        </h6>
+                                        <small>
+                                            사용자의 결제 내역을 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+                                        {% if reviews|length < 1 %}
+                                        <p class="small">
+                                            아직 리뷰가 없습니다.
+                                        </p>
+                                        {% else %}
+
+                                        {% for review in reviews %}
+                                        <div class="py-3">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <small class="text-secondary">
+                                                        {{review.account.nickname}} | {{review.dt}}
+                                                    </small>
+                                                    <p class="text-dark">
+                                                        {{review.content}}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small text-danger" href="javascript: deleteReview('{{review.id}}');">
+                                                        <i class="fa fa-xmark"></i> 삭제
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+
+
+
+
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- ACCOUNT: nickname -->
+        <div class="modal fade" id="accountNicknameRewriteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">닉네임 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>닉네임</label>
+                            <input type="text" class="form-control" id="nickname" value="{{account.nickname}}">
+                            <smal class="text-secondary display-30">최대 20글자</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="rewriteAccountNickname();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT: tel -->
+        <div class="modal fade" id="accountTelRewriteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">연락처 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>연락처</label>
+                            <input type="text" class="form-control" id="tel" value="{{account.tel}}">
+                            <smal class="text-secondary display-30">
+                                연락처는 상담사 가입 시 입력한 연락처를 입력해주세요.<br>
+                                (-) 없이 숫자만 입력해주세요.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="rewriteAccountTel();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var modifingTable = '';
+            var modifingField = '';
+
+            // elements
+            const nicknameInput = document.getElementById('nickname');
+            const telInput = document.getElementById('tel');
+            const emailInput = document.getElementById('email');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            rewriteAccountNickname = async () => {
+                var nickname = nicknameInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{account.id}}');
+                formData.append('nickname', nickname);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.reload();
+            }
+
+            rewriteAccountTel = async () => {
+                var tel = telInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{account.id}}');
+                formData.append('tel', tel);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.reload();
+            }
+
+            rewriteAccountEmail = async () => {
+                var email = emailInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{account.id}}');
+                formData.append('email', email);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.href = `/supervisor_account?id=${email}`;
+            }
+
+            deleteAccount = async () => {
+                var id = '{{account.id}}';
+
+                var formData = new FormData();
+                formData.append('id', id);
+                await fetch('/api/delete_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.href = '/supervisor_accounts';
+            }
+
+        </script>
+
+    </body>
+
+</html>

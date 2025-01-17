@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.location.href='/counselor?id={{counselor.id}}';">
+                        < 상담사 페이지로
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            1:1 문의
+                        </h5>
+                        <small>
+                            문의하신 내용에 대해 상감사가 확인 후 답변드립니다.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="rounded p-2 m-0 bg-light">
+                            <b>
+                                <img src="/static/_sajutoktok/img/icon/megaphone_only.png" style="width: 24px; height: 24px;"> 알려드립니다.
+                            </b>
+                            <p class="m-0 p-1" style="font-size: 12px;">
+                                상담문의는 상담가능 시간, 상담 내용에 대한 간단한 답변만 가능합니다.<br>
+                                답변 시 전화번호, 이메일 등 개인정보는 기재하지 않도록 주의해주세요.
+                            </p>
+                        </div>
+
+                        {% if qnas|length < 1 %}
+                        <p class="small">
+                            문의 내역이 없습니다.
+                        </p>
+                        {% else %}
+                        {% for qna in qnas %}
+                        <div class="col-md-12 py-3">
+                            <a href="/profile_counselor_qna?id={{qna.id}}" class="text-dark">
+                                <p class="m-0 text-dark">
+                                    {% if qna.comment|length < 1 %}
+                                    [답변 대기중] 
+                                    {% else %}
+                                    [답변완료] 
+                                    {% endif %}
+                                    {{qna.title}}
+                                </p>
+                                <small class="text-secondary">
+                                    {{qna.author.nickname}} | {{qna.dt}}
+                                </small>
+                            </a>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+        </script>
+
+    </body>
+
+</html>

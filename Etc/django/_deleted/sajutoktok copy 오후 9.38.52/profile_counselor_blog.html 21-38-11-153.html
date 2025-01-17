@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        <i class="fa fa-chevron-left"></i> 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <span>
+                            <span class="h5">{{blog.title}}</span> <a class="small" href="javascript: new bootstrap.Modal(blogTitleModifyModal).show();"><i class="fa fa-pen"></i></a><br>
+                        </span>
+                        <small>
+                            {{blog.account.nickname}} | {{blog.dt}}
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="post my-4" style="min-height: calc(100vh - 200px);">
+                        <div class="content">
+                            {% if blog.media != '' %}
+                            {% if blog.media.media_type == 'single_image' %}
+                            <img src="{{blog.media.media.0}}" class="w-100 my-4">
+                            {% elif blog.media.media_type == 'selectable_images' %}
+                            <div class="xzoom-container mt-4">
+                                <img class="xzoom5 w-100" id="xzoom-magnific" src="{{blog.media.media.0}}" xoriginal="{{blog.media.media.0}}">
+                            </div>
+                            <div class="xzoom-thumbs my-4 text-start">
+                                {% for photo in blog.media.media %}
+                                <a href="{{photo}}" style="display: inline-block;">
+                                    <div class="xzoom-gallery5" src="{{photo}}" style="width: 80px; height: 60px; background: url('{{photo}}') center/contain no-repeat black; box-shadow: 0px 0px 3px gainsboro;"></div>
+                                </a>
+                                {% endfor %}
+                            </div>
+                            {% elif blog.media.media_type == 'embed' %}
+                            <iframe width="100%" height="450px;" src="{{blog.media.media}}" class="my-4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            {% endif %}
+                            {% endif %}
+                            <p class="text-end">
+                                <a class="small" href="javascript: new bootstrap.Modal(blogMediaModifyModal).show();">< 미디어 수정/업로드</a>
+                            </p>
+                            <div class="post-cont">
+                                <div style="min-height: 100vh;">
+                                    {{blog.content|safe}}
+                                </div>
+                                <a class="small" href="javascript: new bootstrap.Modal(noticeContentModifyModal).show();">내용 수정 ></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- comment -->
+                        <div class="post my-4">
+                            <h6>댓글</h6>
+                            <div class="my-4">
+                                <div class="form-group position-relative" onkeyup="if(event.keyCode == 13) leaveComment('{{blog.id}}');">
+                                    <input id="commentMessage" class="form-control border-0 border-bottom" style="border-radius: 0px;" placeholder="댓글을 남겨보세요.">
+                                    <a href="javascript: leaveComment('{{post.id}}');" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); font-size: 24px;">
+                                        <i class="fa-solid fa-paper-plane"></i>
+                                    </a>
+                                </div>
+                                <div class="mt-4">
+                                    {% for comment in post.comments %}
+                                    <div class="mb-4" style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <p class="mb-0 small">
+                                                <b>{{comment.account.nickname}}</b> | {{comment.dt}}
+                                            </p>
+                                            <p class="mb-0 text-dark">
+                                                ↳ {{comment.content}}
+                                            </p>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <a class="small" href="javascript: deleteComment('{{comment.id}}');">
+                                                <i class="fa fa-xmark"></i> 삭제
+                                            </a>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- WYSIWYG -->
+        <div class="modal fade" id="wysiwygModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">텍스트 편집기</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="editor-controls">
+                                <select id="fontSize" class="control-select">
+                                    <option value="1">매우 작게</option>
+                                    <option value="2">작게</option>
+                                    <option value="3" selected>보통</option>
+                                    <option value="4">큼</option>
+                                    <option value="5">더 큼</option>
+                                    <option value="6">매우 큼</option>
+                                    <option value="7">최대</option>
+                                </select>
+                                <button id="boldToggleButton" class="editor-button" onclick="formatText('bold')">B</button>
+                                <button id="underlineToggleButton" class="editor-button" onclick="formatText('underline')">U</button>
+                                <button id="italicToggleButton" class="editor-button" onclick="formatText('italic')">I</button>
+                            </div>
+                            <div contenteditable="true" id="content">{{notice.content|safe}}</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setWysiwyg();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEDIA -->
+        <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">미디어 업로드</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- media select -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label>미디어 타입</label>
+                                    <select class="form-control form-select" id="mediaType">
+                                        <option value="single_image" selected>단일 이미지</option>
+                                        <option value="selectable_images">다중 이미지</option>
+                                        <option value="embed">유튜브 링크</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- multiful image upload -->
+                            <div class="row" id="multifulImage" style="display: none;">
+                                <div class="form-group">
+                                    <div class="owl-carousel owl-theme testmonial-style02" style="height: 52vw; max-height: 400px;">
+
+                                        <!-- 이미지 0 -->
+                                        <div class="item preview0">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="javascript: deleteImage(0);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 1 -->
+                                        <div class="item preview1">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="javascript: deleteImage(0);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 2 -->
+                                        <div class="item preview2">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(2);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 3 -->
+                                        <div class="item preview3">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(3);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 4 -->
+                                        <div class="item preview4">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(4);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>이미지(최대 5개 등록 가능)</label><br>
+                                    <small>이미지 선택형 또는 캐로셀</small>
+                                </div>
+                            </div>
+
+                            <!-- single image upload -->
+                            <div class="row" id="singleImage" style="display: block;">
+                                <div class="form-group">
+
+                                    <!-- 이미지 0 -->
+                                    <div class="preview5">
+                                        <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                            <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <label>이미지</label><br>
+                                    <small>단일 이미지의 경우 가로 크기가 최대로 설정됩니다.</small>
+                                </div>
+                            </div>
+
+                            <!-- image upload -->
+                            <div class="row" id="imageUpload" style="display: block;">
+                                <div class="form-group">
+                                    <input id="images" type="file" class="form-control" style="height: 35px;" accept="image/png, image/jpeg, image/gif" multiple>
+                                </div>
+                            </div>
+
+                            <!-- embed -->
+                            <div class="row" id="embedCode" style="display: none;">
+                                <div class="form-group">
+                                    <label>유튜브 링크</label>
+                                    <input class="form-control" id="embed"></input>
+                                    <small>
+                                        유튜브 링크 하단의 공유하기 > 동영상 퍼가기 내 "https://www.youtube.com/embed/..." 형태의 URL 주소를 입력해주세요.<br>
+                                        https://www.youtube.com/embed/aaaaaaaaa?si=bbbbbbbbbb 와 같은 형태입니다.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setMedia();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- notice title -->
+        <div class="modal fade" id="noticeTitleModifyModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">공지사항 제목 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>제목</label>
+                            <input class="form-control" id="newNoticeTitle" value="{{notice.title}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setNewNoticeTitle();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <!-- media -->
+        <script>
+            const preview0Box = document.getElementById("preview0");
+            const preview1Box = document.getElementById("preview1");
+            const preview2Box = document.getElementById("preview2");
+            const preview3Box = document.getElementById("preview3");
+            const preview4Box = document.getElementById("preview4");
+            const preview5Box = document.getElementById("preview5");
+            const imagesInput = document.getElementById("images");
+            const photosInput = document.getElementById("photos");
+            const mediaTypeInput = document.getElementById('mediaType');
+            const multifulImageBox = document.getElementById('multifulImage');
+            const singleImageBox = document.getElementById('singleImage');
+            const imageUploadBox = document.getElementById('imageUpload');
+            const embedCodeBox = document.getElementById('embedCode');
+            const embedInput = document.getElementById('embed');
+            let uploadedFiles = [];
+
+            imagesInput.addEventListener('change', function () {
+                const filesArray = Array.from(imagesInput.files);
+                filesArray.sort((a, b) => a.name.localeCompare(b.name));
+                for (let i = 0; i < 5; i++) {
+                    if (filesArray[i] && checkImage(filesArray[i])) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                            document.querySelectorAll(`.preview5>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(filesArray[i]);
+                        uploadedFiles.push(filesArray[i]);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            });
+
+            function deleteImage(index) {
+                uploadedFiles.splice(index, 1);
+                for (let i = 0; i < 5; i++) {
+                    if (i < uploadedFiles.length) {
+                        const file = uploadedFiles[i];
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            }
+
+            mediaTypeInput.addEventListener('input', () => {
+                const mediaType = mediaTypeInput.value;
+                if (mediaType === 'single_image') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'block';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'selectable_images') {
+                    multifulImageBox.style.display = 'block';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'embed') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'block';
+                }
+            });
+        </script>
+        <!-- wysiwyg -->
+        <script>
+            document.getElementById('fontSize').addEventListener('change', function() {
+                formatText('fontSize', this.value);
+            });
+            function formatText(command) {
+                if (command === 'fontSize') {
+                    document.execCommand('fontSize', false, arguments[1]);
+                } else {
+                    document.execCommand(command, false, null);
+                    const buttonId = command + 'ToggleButton';
+                    const button = document.getElementById(buttonId);
+                    button.classList.toggle('toggle-active');
+                }
+                document.getElementById('content').focus();
+            }
+            document.getElementById('content').addEventListener('paste', function(e) {
+                e.preventDefault();
+                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            });
+        </script>
+        <script>
+            // elements
+            const commentMessageInput = document.getElementById('commentMessage');
+
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            leaveComment = async (post_id) => {
+                var content = commentMessageInput.value;
+
+                if (content == '') {
+                    return;
+                }
+
+                await setData({
+                    model: 'COMMENT',
+                    id: '',
+                    field_value: JSON.stringify({
+                        account_id: '{{account.id}}',
+                        content: content,
+                        post_id: post_id
+                    })
+                }).then(() => {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">댓글 작성</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    댓글이 작성되었습니다.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `success`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``,
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                });
+            }
+
+            deleteComment = async (comment_id) => {
+                await Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">댓글 삭제</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                댓글을 삭제하시겠습니까?
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `삭제하기`,
+                    confirmButtonColor: `#dc3545`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await deleteData({
+                            model: 'COMMENT',
+                            id: comment_id
+                        }).then(() => {
+                            Swal.fire({
+                                html: `
+                                <div>
+                                    <div class="text-center py-4">
+                                        <h1 class="text-dark">삭제 완료</h1>
+                                    </div>
+                                    <diV class="text-start">
+                                        <p class="text-secondary">
+                                            댓글이 삭제되었습니다.
+                                        </p>
+                                    </div>
+                                </div>`,
+                                icon: `success`,
+                                showConfirmButton: true,
+                                confirmButtonText: `확인`,
+                                showCancelButton: false,
+                                cancelButtonText: ``,
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        });
+                    }
+                });
+            }
+        </script>
+
+    </body>
+
+</html>

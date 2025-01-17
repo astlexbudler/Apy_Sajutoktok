@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                        <div style="display: inline-block; text-align: left;">
+                            <a class="small" href="javascript: window.location.href='/supervisor';">
+                                < 관리자 페이지로
+                            </a>
+                        </div>
+                        <div style="display: inline-block; text-align: right;">
+                            <a class="small" href="javascript: syncCounselors();">
+                                <i class="fa-solid fa-rotate"></i> 상담가 동기화
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            상담가 계정들
+                        </h5>
+                        <small>
+                            사주톡톡의 상담가 계정 연결을 관리합니다.<br>
+                            기본 상담가 아이디 및 비밀번호: 상담가 번호
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="row">
+                            {% if counselors|length < 1 %}
+                            <p class="small">
+                                현재 등록된 상담가가 없습니다.. 동기화를 먼저 해주세요.
+                            </p>
+                            {% endif %}
+
+                            {% for counselor in counselors %}
+                            <div class="my-2 pb-3 row">
+                                <div class="mb-1" style="display: flex;">
+                                    <div style="display: inline-block; text-align: left;" class="me-4">
+                                        <div class="shadow" style="max-width: 340px; width: 40vw; max-height: 240px; height: 30vw; border-radius: 25px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                    </div>
+                                    <div style="display: inline-block;">
+
+                                        <!-- status -->
+                                        {% if counselor.status == 'offline' %}
+                                        <span class="badge bg-secondary p-1 px-2 mb-1">오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+                                        {% elif counselor.status == 'online' %}
+                                        <span class="badge bg-primary p-1 px-2 mb-1">상담가능 <i class="fa-solid fa-phone"></i></span>
+                                        {% elif counselor.status == 'busy' %}
+                                        <span class="badge bg-danger p-1 px-2 mb-1">상담중 <i class="fa-solid fa-phone"></i></span>
+                                        {% else %}
+                                        <span class="badge bg-secondary p-1 px-2 mb-1">숨김 <i class="fa-solid fa-eye-slash"></i></span>
+                                        {% endif %}
+
+                                        <!-- info -->
+                                        <h5>
+                                            {{counselor.nickname}}
+                                        </h5>
+                                        <p class="small m-0 mb-2">
+                                            {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                                            <span class="badge bg-secondary" style="padding: 2px 6px 2px 6px; font-size: 12px;">서비스 없음</span>
+                                            {% endif %}
+                                            {% for service in counselor.services %}
+                                            {% if service == 'saju' %}
+                                            <span class="badge bg-success" style="padding: 2px 6px 2px 6px; font-size: 12px;">사주</span>
+                                            {% elif service == 'taro' %}
+                                            <span class="badge bg-primary" style="padding: 2px 6px 2px 6px; font-size: 12px;">타로</span>
+                                            {% elif service == 'jum' %}
+                                            <span class="badge bg-danger" style="padding: 2px 6px 2px 6px; font-size: 12px;">신점</span>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                        <p class="small m-0 mb-2">
+                                            {% if counselor.categories|length == 1 and counselor.categories.0 == '' %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">상담 없음</span>
+                                            {% endif %}
+                                            {% if 'tel' in counselor.categories %}
+                                            <span class="badge bg-success p-1 px-2 mb-1">전화 상담</span>
+                                            {% endif %}
+                                            {% if 'chat' in counselor.categories %}
+                                            <span class="badge bg-primary p-1 px-2 mb-1">채팅 상담</span>
+                                            {% endif %}
+                                            {% if 'meet' in counselor.categories %}
+                                            <span class="badge bg-danger p-1 px-2 mb-1">대면 상담</span>
+                                            {% endif %}
+                                            {% if 'cafe' in counselor.categories %}
+                                            <span class="badge bg-warning p-1 px-2 mb-1">카페 상담</span>
+                                            {% endif %}
+                                        </p>
+                                        <small>
+                                            {{counselor.introduce}}<br>
+                                        </small>
+
+                                        <!-- button -->
+                                        <div class="mt-4">
+                                            <a href="/supervisor_counselor?id={{counselor.id}}" class="btn btn-primary me-2">
+                                                <i class="fa fa-user"></i> 프로필
+                                            </a>
+                                            <a href="/chat?opponent={{counselor.id}}" class="btn btn-primary me-2">
+                                                <i class="fa fa-comment"></i> 대화하기
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <p class="small mt-1">
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-message text-info"></i> <b>후기</b>({{counselor.reviews_count}})
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-star text-info"></i> <b>{{counselor.review_avg}}</b>({{counselor.reviews_count}})
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-heart text-info"></i> <b>{{counselor.likes}}</b>
+                                    </span>
+                                </p>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // fumctions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            syncCounselors = async () => {
+                Swal.fire({
+                    html: `
+                    <div class="mt-4">
+                        <div class="text-center pb-4">
+                            <h1 class="text-dark">CP 코드</h1>
+                        </div>
+                        <diV class="text-start">
+                            <div class="form-group">
+                                <label for="cp_code">CP 코드</label>
+                                <input type="text" id="cp_code" class="form-control" value="133" readonly />
+                            </div>
+                            <div class="form-group">
+                                <label for="service_number">서비스 번호</label>
+                                <input type="text" id="service_number" class="form-control" value="3005955" readonly />
+                                <small>
+                                    동기화할 상담가들의 CP 코드와 서비스 번호를 입력해주세요.<br>
+                                    이미 동기화된 상담가들은 다시 동기화되지 않습니다.
+                                </small>
+                            </div>
+                        </div>
+                    </div>`,
+                    icon: ``,
+                    showConfirmButton: true,
+                    confirmButtonText: `동기화하기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await fetch(`/cp/cp_sync_counselors`)
+                        .then(() => window.location.reload());
+                    }
+                });
+            }
+        </script>
+
+    </body>
+
+</html>

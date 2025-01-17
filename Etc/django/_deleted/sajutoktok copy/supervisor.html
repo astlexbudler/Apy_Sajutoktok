@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h4>
+                            사주톡톡 관리자
+                        </h4>
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_notices">
+                                    <i class="fa-solid fa-bullhorn"></i>
+                                    <h3 class="h5 mb-3">공지사항</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        공지사항을 작성하고 관리합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_events">
+                                    <i class="fa-regular fa-calendar"></i>
+                                    <h3 class="h5 mb-3">이벤트</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        이벤트를 작성하고 관리합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_counselors">
+                                    <i class="fa-regular fa-address-card"></i>
+                                    <h3 class="h5 mb-3">상담가 계정</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        상담가 계정을 확인하고 관리합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_users">
+                                    <i class="fa-regular fa-user"></i>
+                                    <h3 class="h5 mb-3">사용자 계정</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        사용자 계정을 확인하고 관리합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_items">
+                                    <i class="fa-solid fa-cart-shopping"></i>
+                                    <h3 class="h5 mb-3">점사 마켓 상품</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        점사 마켓 상품을 확인하고 주문 내역을 관리합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_purchases">
+                                    <i class="fa-regular fa-credit-card"></i>
+                                    <h3 class="h5 mb-3">결제 및 사용 내역</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        PG사 및 인앱결제 기록과 포인트 사용 내역을 확인합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 col-lg-4 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <a href="/supervisor_send_push">
+                                    <i class="fa-regular fa-bell"></i>
+                                    <h3 class="h5 mb-3">알림 메세지 발송</h3>
+                                    <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                        웹 및 앱 알림 매새지를 발송합니다.
+                                    </p>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mt-4">
+                            <div class="card card-style05 pt-2-8 pb-2-4 px-1-6 border">
+                                <i class="far fa-comments"></i>
+                                <h3 class="h5 mb-3">문의사항</h3>
+                                <p class="mb-0 w-90 w-md-75 w-lg-100 mx-auto">
+                                    사용중 문제가 발생하거나, 문의가 생겼다면 아래 연락처로 문의주세요.<br>
+                                    <br>
+                                    사무실 070-7757-7779<br>
+                                    일반전화 010-4109-8317
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+        </script>
+
+    </body>
+
+</html>

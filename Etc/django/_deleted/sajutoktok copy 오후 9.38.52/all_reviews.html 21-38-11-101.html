@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% if account.account_type == 'counselor' %}
+            {% include "_sajutoktok/parts/header_counselor.html" %}
+            {% else %}
+            {% include "_sajutoktok/parts/header_user.html" %}
+            {% endif %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 py-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        < 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            모든 후기
+                        </h5>
+                        <small>
+                            사주톡톡의 모든 상담가들의 후기를 확인할 수 있습니다.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        {% if reviews|length < 1 %}
+                        <p class="small">
+                            아직 작성된 리뷰가 없습니다.
+                        </p>
+                        {% endif %}
+
+                        <div class="row" id="infiniteBox">
+                            {% for review in reviews %}
+                            <div class="my-2 pb-1 row">
+                                <div class="my-2 row">
+                                    <div class="mb-1" style="display: flex;">
+                                        <div style="display: inline-block; text-align: left;" class="me-4">
+                                            <div class="shadow" style="max-width: 340px; width: 40vw; max-height: 240px; height: 30vw; border-radius: 25px; background: url('{{review.counselor.photo}}') center/cover white;"></div>
+                                        </div>
+                                        <div style="display: inline-block;">
+        
+                                            <!-- info -->
+                                            <h5>
+                                                {{review.counselor.nickname}}
+                                            </h5>
+                                            <small>
+                                                {{review.counselor.introduce}}<br>
+                                            </small>
+                                            <p class="small m-0 mb-2">
+                                                {% if review.counselor.services|length == 1 and review.counselor.services.0 == '' %}
+                                                <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/sleep.png" class="w-60" style="display: inline;">
+                                                </div>
+                                                {% endif %}
+                                                {% for service in review.counselor.services %}
+                                                {% if service == 'saju' %}
+                                                <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/saju.png" class="w-60" style="display: inline;">
+                                                </div>
+                                                {% elif service == 'taro' %}
+                                                <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/taro.png" class="w-60" style="display: inline;">
+                                                </div>
+                                                {% elif service == 'jum' %}
+                                                <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/jum.png" class="w-60" style="display: inline;">
+                                                </div>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </p>
+                                            <p class="small m-0 mb-2">
+                                                {% if review.counselor.categories|length == 1 and review.counselor.categories.0 == '' %}
+                                                <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/icon/empty.png" class="w-60" style="display: inline;">
+                                                </div>
+                                                {% endif %}
+                                                {% if 'tel' in review.counselor.categories %}
+                                                <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/video-call.png" class="w-30" style="display: inline;">
+                                                    <span style="font-size: 12px;">
+                                                        전화 상담
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                                {% if 'chat' in review.counselor.categories %}
+                                                <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/message_bubbles.png" class="w-30" style="display: inline;">
+                                                    <span style="font-size: 12px;">
+                                                        채팅 상담
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                                {% if 'meet' in review.counselor.categories %}
+                                                <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/conversation.png" class="w-30" style="display: inline;">
+                                                    <span style="font-size: 12px;">
+                                                        대면 상담
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                                {% if 'cafe' in review.counselor.categories %}
+                                                <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                    <img src="/static/_sajutoktok/img/content/coffee.png" class="w-30" style="display: inline;">
+                                                    <span style="font-size: 12px;">
+                                                        카페 상담
+                                                    </span>
+                                                </div>
+                                                {% endif %}
+                                            </p>
+
+                                            <!-- button -->
+                                            <div class="mt-4">
+                                                <a href="/counselor?id={{review.counselor.id}}" class="btn btn-primary me-2">
+                                                    <i class="fa fa-user"></i> 프로필
+                                                </a>
+                                                <a href="/chat?opponent={{review.counselor.id}}" class="btn btn-primary me-2">
+                                                    <i class="fa fa-comment"></i> 대화하기
+                                                </a>
+                                            </div>
+        
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="py-3">
+                                    <div style="display: flex; justify-content: space-between;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                {% if review.star == 1 %}
+                                                <b>{{review.user.nickname}}</b> 
+                                                <span class="btn btn-light p-1 px-2 border" style='font-size: 14px'>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </span>
+                                                {% elif review.star == 2 %}
+                                                <b>{{review.user.nickname}}</b> 
+                                                <span class="btn btn-light p-1 px-2 border" style='font-size: 14px'>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </span>
+                                                {% elif review.star == 3 %}
+                                                <b>{{review.user.nickname}}</b> 
+                                                <span class="btn btn-light p-1 px-2 border" style='font-size: 14px'>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </span>
+                                                {% elif review.star == 4 %}
+                                                <b>{{review.user.nickname}}</b> 
+                                                <span class="btn btn-light p-1 px-2 border" style='font-size: 14px'>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star"></i>
+                                                </span>
+                                                {% elif review.star == 5 %}
+                                                <b>{{review.user.nickname}}</b> 
+                                                <span class="btn btn-light p-1 px-2 border" style='font-size: 14px'>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                    <i class="fa fa-star text-warning"></i>
+                                                </span>
+                                                {% endif %}
+                                            </div>
+                                            <p class="text-dark">
+                                                {{review.content}}
+                                            </p>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <a class="small text-danger" href="javascript: deleteTableData('REVIEW', '{{review.id}}');">
+                                                <i class="fa fa-xmark"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var page = 1
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                // check reviewable purchase
+                checkReview();
+
+                // infinite scroll
+                setInterval(() => {
+                    infiniteScroll();
+                }, 3000);
+            }
+
+            deleteReview = async (reviewId) => {
+                await Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">리뷰 삭제</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                정말로 리뷰를 삭제하시겠습니까?<br>
+                                한번 삭제한 리뷰는 다시 작성할 수 없습니다.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `삭제하기`,
+                    confirmButtonColor: `#dc3545`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소하기`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await deleteData({
+                            model: 'REVIEW',
+                            id: reviewId
+                        });
+                        location.reload();
+                    }
+                });
+            }
+
+            checkReview = async () => {
+                await getData({
+                    model: 'PURCHASE',
+                    id: '',
+                    field: 'status',
+                    value: 'completed'
+                }).theen(async (res) => {
+                    var dbData = JSON.parse(data.db);
+                    if (dbData.length > 0) {
+                        var pk = dbData[0].pk;
+                        var fields = dbData[0].fields;
+
+                        await Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">리뷰 작성</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        최근 상담 결과에 만족하시나요?<br>
+                                        지금 바로 사주가 리뷰를 남겨주세요!
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `info`,
+                            showConfirmButton: true,
+                            confirmButtonText: `이동하기`,
+                            showCancelButton: true,
+                            cancelButtonText: `괜찮아요`,
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // payment_code == counselor_id
+                                window.location.href = `/counselor?id=${fields.payment_code}`;
+                            }
+                        });
+
+                    }
+                });
+            }
+
+            infiniteScroll = async () => {
+                var maxScroll = document.body.scrollHeight;
+                var nowScroll = window.pageYOffset;
+
+                // load
+                if (maxScroll - nowScroll < 1500) {
+                    page += 1;
+                    await fetch('/all_revuew?page=' + page, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var reviews = data["reviews"];
+                        for (var i = 0; i < reviews.length; i++) {
+                            var review = reviews[i];
+                            var reviewHtml = `
+                            <div class="account-sidebar">
+                                <div class="account-widget personal-data">
+                                    <div class="w-100 my-2 mb-4">
+                                        <div class="mb-2" style="display: flex; cursor: pointer;" onclick="window.location.href='/counselor?id=${review.counselor.id}';">
+                                            <div style="display: inline-block; text-align: left;" class="me-4">
+                                                <div class="shadow" style="max-width: 100px; width: 12vw; max-height: 100px; height: 12vw; border-radius: 50%; background: url('${review.counselor.photo}') center/cover white;"></div>
+                                            </div>
+                                            <div style="display: inline-block;">
+                                                <p>
+                                                    <span class="h5">${review.counselor.nickname}</span>
+                                                </p>
+                                                <p class="small">
+                                                    ${review.counselor.bookmarks.map(service => {
+                                                        if (service == 'taro') {
+                                                            return `<span class="text-dark"># 타로</span>`;
+                                                        } else if (service == 'saju') {
+                                                            return `<span class="text-dark"># 사주</span>`;
+                                                        } else if (service == 'jum') {
+                                                            return `<span class="text-dark"># 신점</span>`;
+                                                        }
+                                                    })}
+                                                    <br>
+                                                </p>
+                                                <p class="text-dark">
+                                                    ${review.counselor.intro}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="content">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <p class="mb-0 small">
+                                                        <b>${review.user.nickname}</b> | ${review.dt}
+                                                    </p>
+                                                    <p class="mb-0 text-dark">
+                                                        ↳ ${review.content}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    ${account.id == review.user.id && account.id != '' ? `<a class="small text-danger" href="javascript: deleteReview('${review.id}');"><i class="fa fa-xmark"></i></a>` : ``}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>`;
+                            document.querySelector('.my-4').innerHTML += reviewHtml;
+                        }
+                    });
+                }
+            }
+        </script>
+
+    </body>
+
+</html>

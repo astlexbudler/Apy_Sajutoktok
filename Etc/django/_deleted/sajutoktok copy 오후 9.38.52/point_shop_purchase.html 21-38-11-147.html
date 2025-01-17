@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- HEADER
+            ================================================== -->
+            {% if account.account_type == 'counselor' %}
+            {% include "_sajutoktok/parts/header_counselor.html" %}
+            {% else %}
+            {% include "_sajutoktok/parts/header_user.html" %}
+            {% endif %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        < 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            결제 확인
+                        </h5>
+                        <small>
+                            아래 내용을 확인하시고 결제를 진행해주세요.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="rounded border shadow p-3">
+
+                            <!-- item info -->
+                            <div>
+                                <div class="mt-1 mb-2 h6">
+                                    <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> 
+                                    {{cash_item.name}}
+                                </div>
+                                <small class="text-secondary">
+                                    {{cash_item.description}}
+                                </small>
+                                <div class="text-end">
+                                    <span class="h6 text-danger">
+                                        <span class="price">{{cash_item.price}}</span>원
+                                    </span>
+                                    <span class="m-0 text-secondary" style="font-size: 11px;">
+                                        (vat 별도)
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- purchase terms -->
+                            <div class="my-4">
+                                <p class="m-0 text-dark">
+                                    상품(서비스) 구매 및 환불 처리 약관
+                                </p>
+                                <div class="rounded border p-2" style="height: 200px; overflow-y: auto;">
+                                    {{purchase_terms.terms}}
+                                </div>
+                                <div class="form-group mt-2">
+                                    <input type="checkbox" class="custom-control-input" id="termsAgree" style="display: inline;">
+                                    <label class="custom-control-label small" for="termsAgree" style="display: inline;">
+                                        상품(서비스) 구매 및 환불 처리 약관에 동의합니다.
+                                    </label>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- purchase -->
+                        <div class="mt-4 rounded border shadow p-3" style="display: block;" id="paymentBox">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for="pgcode">결제 방식 선택</label>
+                                    <select class="form-control form-select" id="pgcode">
+                                        <option value="creditcard" selected>신용카드</option>
+                                        <option value="banktransfer">인터넷뱅킹(금융결제원)</option>
+                                        <option value="virtualaccount">가상계좌</option>
+                                        <option value="mobile">휴대폰</option>
+                                        <option value="voucher">문화상품권</option>
+                                        <option value="book">도서상품권</option>
+                                        <option value="culture">컬쳐랜드상품권</option>
+                                        <option value="smartculture">스마트문상</option>
+                                        <option value="happymoney">해피머니상품권</option>
+                                        <option value="mobilepop">모바일팝</option>
+                                        <option value="teencash">틴캐시</option>
+                                        <option value="tmoney">교통카드결제</option>
+                                        <option value="cvs">편의점캐시</option>
+                                        <option value="eggmoney">에그머니</option>
+                                        <option value="oncash">온캐시</option>
+                                        <option value="phonebill">폰빌</option>
+                                        <option value="cashbee">이즐</option>
+                                        <option value="kakaopay">카카오페이</option>
+                                        <option value="payco">페이코</option>
+                                        <option value="checkpay">체크페이</option>
+                                        <option value="toss">토스</option>
+                                        <option value="ssgpay">SSG페이</option>
+                                        <option value="naverpay">네이버페이</option>
+                                        <option value="samsungpay">삼성페이</option>
+                                        <option value="smilepay">스마일페이</option>
+                                        <option value="applepay">애플페이</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <input type="checkbox" class="custom-control-input" id="receipt" style="display: inline;">
+                                    <label class="custom-control-label display-30" for="receipt" style="display: inline;">
+                                        현금영수증 발급(소득공제 또는 지출 증빙용)
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="requestPurchase();">
+                                <i class="fas fa-credit-card"></i> 결제하기
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            // variables
+            var itemId = '{{cash_item.id}}';
+
+            // elements
+            const termsAgreeInput = document.getElementById("termsAgree");
+            const pgcodeInput = document.getElementById("pgcode");
+            const receiptFlag = document.getElementById("receipt");
+            const paymentBox = document.getElementById("paymentBox");
+
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                document.querySelectorAll('.price').forEach((element) => {
+                    element.innerHTML = element.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+            }
+
+            termsAgreeInput.addEventListener('change', () => {
+                if (termsAgreeInput.checked) {
+                    paymentBox.style.display = 'block';
+                } else {
+                    paymentBox.style.display = 'none';
+                }
+            });
+
+            requestPurchase = async () => {
+                var pgcode = pgcodeInput.value;
+                var receipt = receiptFlag.checked ? 'Y' : 'N';
+
+                var formData = new FormData();
+                formData.append('pgcode', pgcode);
+                formData.append('receipt_flag', receipt);
+                formData.append('item_id', itemId);
+
+                await fetch('/pl/pl_request_purchase', {
+                    method: 'post',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: formData
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+
+                    var success = data['success'];
+                    if (success == 'y') {
+                        var token = data['token'];
+                        var online_url = data['online_url'];
+                        var mobile_url = data['mobile_url'];
+                        var userAgent = checkUserAgent();
+
+                        if (userAgent == 'pc') {
+                            document.location.href = online_url;
+                        } else {
+                            document.location.href = mobile_url;
+                        }
+                    } else {
+                        var error = data['error'];
+                        alert(error);
+                        return
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+        <style>
+            #noticeBox {
+                overflow: hidden;
+                max-height: 0;
+                opacity: 0;
+                visibility: hidden;
+                transition: max-height 0.5s ease, opacity 0.5s ease;
+            }
+
+            #noticeBox.open {
+                max-height: 500px; /* 펼쳐질 때의 최대 높이. 게시글 길이에 맞춰 조정 가능 */
+                opacity: 1;
+                visibility: visible;
+            }
+        </style>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% if account.account_type == 'counselor' %}
+            {% include "_sajutoktok/parts/header_counselor.html" %}
+            {% else %}
+            {% include "_sajutoktok/parts/header_user.html" %}
+            {% endif %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 pb-4" style="min-height: 100vh;">
+
+                <!-- events -->
+                <div class="container p-0">
+                    <div class="owl-carousel owl-theme">
+                        {% if events|length < 1 %}
+                        <a href="/events">
+                            <div class="post-img w-100" style="min-height: 200px; height: 20vw; background: url('/media/default.png') center/contain no-repeat darkgray;"></div>
+                        </a>
+                        {% endif %}
+                        {% for event in events %}
+                        <a href="/event?id={{event.id}}">
+                            <div class="post-img w-100" style="min-height: 200px; height: 20vw; background: url('{{event.main_image}}') center/contain no-repeat darkgray;"></div>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- category -->
+                <div class="container p-0">
+                    <div class="cart-table">
+                        <div class="table-responsive">
+                            <table class="table border-0">
+                                <tr>
+                                    <td style="width: 120px;">
+                                        <a href="javascript: trySearch('{{request.GET.category}}', '', '{{request.GET.keyword}}');">
+                                            <div class="shadow border text-center p-2 pt-3 my-2" style="width: 80px; border-radius: 16px;">
+                                                <img src="/static/_sajutoktok/img/content/team.png" class="w-60" style="display: inline;">
+                                                <h2 class="mt-2" style="font-size: 20px;">
+                                                    전체
+                                                </h2>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td style="width: 120px;">
+                                        <a href="javascript: trySearch('{{request.GET.category}}', 'taro', '{{request.GET.keyword}}');">
+                                            <div class="shadow border text-center p-2 pt-3 my-2" style="width: 80px; border-radius: 16px;">
+                                                <img src="/static/_sajutoktok/img/content/taro.png" class="w-60" style="display: inline;">
+                                                <h2 class="mt-2" style="font-size: 20px;">
+                                                    타로
+                                                </h2>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td style="width: 120px;">
+                                        <a href="javascript: trySearch('{{request.GET.category}}', 'saju', '{{request.GET.keyword}}');">
+                                            <div class="shadow border text-center p-2 pt-3 my-2" style="width: 80px; border-radius: 16px;">
+                                                <img src="/static/_sajutoktok/img/content/saju.png" class="w-60" style="display: inline;">
+                                                <h2 class="mt-2" style="font-size: 20px;">
+                                                    사주
+                                                </h2>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td style="width: 120px;">
+                                        <a href="javascript: trySearch('{{request.GET.category}}', 'jum', '{{request.GET.keyword}}');">
+                                            <div class="shadow border text-center p-2 pt-3 my-2" style="width: 80px; border-radius: 16px;">
+                                                <img src="/static/_sajutoktok/img/content/jum.png" class="w-60" style="display: inline;">
+                                                <h2 class="mt-2" style="font-size: 20px;">
+                                                    신점
+                                                </h2>
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- notices -->
+                <div class="container">
+                    <div class="mt-2">
+                        <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                            <div style="display: inline-block; text-align: left;">
+                                <small>
+                                    <a href="notices" class="badge bg-primary p-1 px-2 text-white" style="border-radius: 20px;"><i class="fa-solid fa-star"></i> 공지사항</a>
+                                    {{ notices.0.title }}
+                                </small>
+                            </div>
+                            <div style="display: inline-block; text-align: right;">
+                                <span class="text-dark" style="font-size: 16px;">
+                                    <a href="javascript: openBox('noticeBox');" class="small">
+                                        <i class="fa fa-chevron-down"></i>
+                                    </a>
+                                </span>
+                            </div>
+                        </div>
+                        <div id="noticeBox">
+                            {% if notices|length < 1 %}
+                            <p class="py-2 small">
+                                공지사항이 없습니다.
+                            </p>
+                            {% endif %}
+                            {% for notice in notices %}
+                            <div class="py-2">
+                                <a href="/notice?id={{notice.id}}" class="text-dark">
+                                    <p class="text-dark mb-0">
+                                        {{notice.title}}
+                                    </p>
+                                    <small>
+                                        사주톡톡 | {{notice.dt}} | 조회 {{notice.views}}
+                                    </small>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- search bar -->
+                <div class="container p-0 pt-2">
+                    <div class="form-group position-relative" onkeyup="if(event.keyCode == 13) trySearch('{{request.GET.category}}', document.querySelector('#searchKeyword').value);">
+                        <input id="searchKeyword" class="form-control" style="border-radius: 0px;" placeholder="검색어를 입력해주세요." value="{{request.GET.searchKeyword}}">
+                        <a href="javascript: trySearch('{{request.GET.category}}', document.querySelector('#searchKeyword').value);" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); font-size: 24px;">
+                            <i class="fa-solid fa-search"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- search result -->
+                <div class="container" style="min-height: 100vh;">
+                    {% if counselors|length < 1 %}
+                    <p class="small">
+                        검색 결과가 없습니다.
+                    </p>
+                    {% endif %}
+                    <div class="row m-0 p-0 my-2 pb-3" id="infiniteBox">
+                        {% for counselor in counselors %}
+                        <div class="mb-2" style="display: flex;">
+                            <div style="display: inline-block; text-align: left;" class="me-3">
+                                <!-- status -->
+                                {% if counselor.status == 'offline' %}
+                                <span class="badge bg-secondary p-1 px-2 mb-1">오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+                                {% elif counselor.status == 'online' %}
+                                <span class="badge bg-primary p-1 px-2 mb-1">상담가능 <i class="fa-solid fa-phone"></i></span>
+                                {% elif counselor.status == 'busy' %}
+                                <span class="badge bg-danger p-1 px-2 mb-1">상담중 <i class="fa-solid fa-phone"></i></span>
+                                {% else %}
+                                <span class="badge bg-secondary p-1 px-2 mb-1">숨김 <i class="fa-solid fa-eye-slash"></i></span>
+                                {% endif %}
+                                <div class="shadow mt-2" style="max-width: 300px; width: 36vw; max-height: 220px; height: 26vw; border-radius: 25px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                <p class="small mt-4">
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-message text-info"></i> <b>후기</b>({{counselor.reviews_count}})
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-star text-info"></i> <b>{{counselor.review_avg}}</b>({{counselor.reviews_count}})
+                                    </span>
+                                    <span class="me-2">
+                                        <i class="fa-solid fa-heart text-info"></i> <b>{{counselor.likes}}</b>
+                                    </span>
+                                </p>
+                            </div>
+                            <div style="display: inline-block;">
+
+                                <h5>
+                                    {{counselor.nickname}}
+                                </h5>
+                                <small>
+                                    {{counselor.introduce}}<br>
+                                </small>
+                                <!-- info -->
+                                <p class="small m-0">
+                                    {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                                    <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/sleep.png" class="w-60" style="display: inline;">
+                                    </div>
+                                    {% endif %}
+                                    {% for service in counselor.services %}
+                                    {% if service == 'saju' %}
+                                    <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/saju.png" class="w-60" style="display: inline;">
+                                    </div>
+                                    {% elif service == 'taro' %}
+                                    <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/taro.png" class="w-60" style="display: inline;">
+                                    </div>
+                                    {% elif service == 'jum' %}
+                                    <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/jum.png" class="w-60" style="display: inline;">
+                                    </div>
+                                    {% endif %}
+                                    {% endfor %}
+                                </p>
+                                <p class="small m-0 mb-2">
+                                    {% if counselor.categories|length == 1 and counselor.categories.0 == '' %}
+                                    <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/icon/empty.png" class="w-60" style="display: inline;">
+                                    </div>
+                                    {% endif %}
+                                    {% if 'tel' in counselor.categories %}
+                                    <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/video-call.png" class="w-30" style="display: inline;">
+                                        <span style="font-size: 12px;">
+                                            전화 상담
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                    {% if 'chat' in counselor.categories %}
+                                    <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/message_bubbles.png" class="w-30" style="display: inline;">
+                                        <span style="font-size: 12px;">
+                                            채팅 상담
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                    {% if 'meet' in counselor.categories %}
+                                    <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/conversation.png" class="w-30" style="display: inline;">
+                                        <span style="font-size: 12px;">
+                                            대면 상담
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                    {% if 'cafe' in counselor.categories %}
+                                    <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                        <img src="/static/_sajutoktok/img/content/coffee.png" class="w-30" style="display: inline;">
+                                        <span style="font-size: 12px;">
+                                            카페 상담
+                                        </span>
+                                    </div>
+                                    {% endif %}
+                                </p>
+
+                                <!-- button -->
+                                <div class="mt-4">
+                                    <a href="/counselor?id={{counselor.id}}" class="btn btn-primary me-1">
+                                        <i class="fa fa-user"></i> 프로필
+                                    </a>
+                                    <a href="/chat?opponent={{counselor.id}}" class="btn btn-primary">
+                                        <i class="fa fa-comment"></i> 대화
+                                    </a>
+                                </div>
+
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <!-- BOTTOM MENU
+        ================================================== -->
+        {% if account.account_type != 'counselor' and account.account_type != 'supervisor' %}
+        {% include "_sajutoktok/parts/bottom_menu.html" %}
+        {% endif %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // var
+            var page = 1;
+
+            // elements
+            const searchKeywordInput = document.querySelector("#searchKeyword");
+            const infiniteBox = document.querySelector("#infiniteBox");
+
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                document.querySelectorAll('.price').forEach(price => {
+                    price.innerHTML = price.innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+
+                setInterval(() => {
+                    infiniteScroll();
+                }, 5000)
+            }
+
+            openBox = (id) => {
+                var box = document.querySelector(`#${id}`);
+                if (!box.classList.contains('open')) {
+                    box.classList.add('open');
+                } else {
+                    box.classList.remove('open');
+                }
+            }
+
+            trySearch = (category, service, searchKeyword) => {
+                window.location.href = `/search?category=${category}&keyword=${searchKeyword}&service=${service}`;
+                return
+            }
+
+            infiniteScroll = async () => {
+                var maxScroll = document.body.scrollHeight;
+                var nowScroll = window.pageYOffset;
+
+                if (maxScroll - nowScroll < 1500) {
+                    page = page + 1;
+
+                    var formData = new FormData();
+                    formData.append('page', page);
+                    await fetch(window.location.href, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        },
+                        body: formData
+                    })
+                    .then((rasponse) => response.json())
+                    .then((data) => {
+                        var counselors = data['counselors'];
+
+                        if (counselors.length > 0) {
+                            html = '';
+                            for (var i = 0; i < counselors.length; i++) {
+                                var counselor = counselors[i];
+                                html += `
+                                <div class="w-100 my-2 pb-3">
+                                    <div class="mb-4" style="display: flex; cursor: pointer;" onclick="document.location.href='/counselor?id=${counselor.id}';">
+                                        <div style="display: inline-block; text-align: left;" class="me-4">
+                                            <div class="shadow" style="max-width: 200px; width: 27vw; max-height: 200px; height: 27vw; border-radius: 50%; background: url('${counselor.photo}') center/cover white;"></div>
+                                        </div>
+                                        <div style="display: inline-block;">
+                                            ${counselor.status == 'offline' ? `
+                                            <p>
+                                                <span class="h5">${counselor.nickname}</span> <small>상태: <span class="text-danger">오프라인</span></small><br>
+                                                <small>연락처:${counselor.tel} 이메일:${counselor.id}</small>
+                                            </p>
+                                            ` : `
+                                            <p>
+                                                <span class="h5">${counselor.nickname}</span> <span class="text-primary small">온라인(상담가능)<br></span>
+                                            </p>
+                                            `}
+                                            <p class="small">
+                                                ${counselor.services.map(service => {
+                                                    if (service == 'taro') {
+                                                        return `<span class="text-dark"># 타로</span>`;
+                                                    } else if (service == 'saju') {
+                                                        return `<span class="text-dark"># 사주</span>`;
+                                                    } else if (service == 'jum') {
+                                                        return `<span class="text-dark"># 신점</span>`;
+                                                    }
+                                                })}
+                                                <br>
+                                            </p>
+                                            <p class="text-dark">
+                                                ${counselor.intro}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <small>
+                                        <i class="fa-solid fa-comment"></i> 대화:${counselor.chat_room_count} | 
+                                        <i class="fa-solid fa-message"></i> 리뷰:${counselor.review_count} | 
+                                        <i class="fa-solid fa-heart"></i> 찜:${counselor.point} |
+                                        <i class="fa-regular fa-note-sticky"></i> 게시글:${counselor.post_count}
+                                    </small>
+                                </div>
+                                `;
+                            }
+                            infiniteBox.innerHTML += html;
+                        } else {
+                            page = page - 1;
+                        }
+                    });
+                }
+            }
+
+        </script>
+
+    </body>
+
+</html>

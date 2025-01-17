@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="p-0 py-2 bg-light" style="min-height: 100vh;">
+                <div class="container d-flex flex-column">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <div class="col-12 col-lg-8">
+
+                            <!-- goback -->
+                            <a href="javascript: window.location.href='/supervisor_events';" class="small">
+                                < 이벤트 페이지로
+                            </a>
+
+                            <div class="card p-4">
+
+                                <!-- title -->
+                                <div class="my-4 text-center">
+                                    <h2 class="font-weight-normal mb-0">이벤트 작성</h2>
+                                    <p class="mb-0">이벤트를 작성해주세요.</p>
+                                </div>
+
+                                <!-- form -->
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <!-- title -->
+                                        <div class="form-group">
+                                            <label>이벤트 제목</label>
+                                            <input type="text" class="form-control" id="title">
+                                        </div>
+
+                                        <!-- media preview -->
+                                        <div class="form-group">
+                                            <label>대표 이미지</label>
+                                            <div id="previewBox">
+                                                <small>미디어 없습니다.</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- media -->
+                                        <div class="form-group text-end">
+                                            <button class="butn style-one fill bg-primary small p-1 px-2" onclick="openMediaModal('main');">
+                                                + 대표 이미지 업로드
+                                            </button>
+                                        </div>
+
+                                        <!-- WYSIWYG editor -->
+                                        <div class="row mt-2">
+                                            <div class="form-group">
+                                                <label>내용</label>
+                                                <div class="editor-controls">
+                                                    <select id="fontSize" class="control-select">
+                                                        <option value="1">매우 작게</option>
+                                                        <option value="2">작게</option>
+                                                        <option value="3" selected>보통</option>
+                                                        <option value="4">큼</option>
+                                                        <option value="5">더 큼</option>
+                                                        <option value="6">매우 큼</option>
+                                                        <option value="7">최대</option>
+                                                    </select>
+                                                    <button id="boldToggleButton" class="editor-button" onclick="formatText('bold')">B</button>
+                                                    <button id="underlineToggleButton" class="editor-button" onclick="formatText('underline')">U</button>
+                                                    <button id="italicToggleButton" class="editor-button" onclick="formatText('italic')">I</button>
+                                                    <button id="uploadMediaButton" class="editor-button" onclick="openMediaModal('content')">
+                                                        <i class="fa fa-image"></i>
+                                                    </button>
+                                                </div>
+                                                <div contenteditable="true" id="content"></div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-12 center">
+                                        <button onclick="writeEvent();" class="butn style-one mt-4 mb-0 bg-primary fill">
+                                            작성하기
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- MEDIA -->
+        <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">미디어 업로드</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- media select -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label>미디어 타입</label>
+                                    <select class="form-control form-select" id="mediaType">
+                                        <option value="single_image" selected>이미지</option>
+                                        <option value="embed">유튜브 동영상</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- single image upload -->
+                            <div class="row" id="singleImage" style="display: block;">
+                                <div class="form-group">
+
+                                    <!-- 이미지 0 -->
+                                    <div class="preview5">
+                                        <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                            <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <label>이미지</label><br>
+                                    <small>단일 이미지의 경우 가로 크기가 최대로 설정됩니다.</small>
+                                </div>
+                            </div>
+
+                            <!-- image upload -->
+                            <div class="row" id="imageUpload" style="display: block;">
+                                <div class="form-group">
+                                    <input id="images" type="file" class="form-control" style="height: 35px;" accept="image/png, image/jpeg, image/gif" multiple>
+                                </div>
+                            </div>
+
+                            <!-- embed -->
+                            <div class="row" id="embedCode" style="display: none;">
+                                <div class="form-group">
+                                    <label>유튜브 링크</label>
+                                    <input class="form-control" id="embed"></input>
+                                    <small>
+                                        유튜브 공유 링크 형태의 URL 주소를 입력해주세요.<br>
+                                        <u>https://www.youtube.com/embed/sajutoktok?si=bVxomHeqHwQLJpFt</u> 또는
+                                        <u>https://youtu.be/sajutoktok?si=bVxomHeqHwQLJpFt</u> 와 같은 형태입니다.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setMedia();">업로드하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <!-- media -->
+        <script>
+            const preview0Box = document.getElementById("preview0");
+            const preview1Box = document.getElementById("preview1");
+            const preview2Box = document.getElementById("preview2");
+            const preview3Box = document.getElementById("preview3");
+            const preview4Box = document.getElementById("preview4");
+            const preview5Box = document.getElementById("preview5");
+            const imagesInput = document.getElementById("images");
+            const photosInput = document.getElementById("photos");
+            const mediaTypeInput = document.getElementById('mediaType');
+            const singleImageBox = document.getElementById('singleImage');
+            const imageUploadBox = document.getElementById('imageUpload');
+            const embedCodeBox = document.getElementById('embedCode');
+            const embedInput = document.getElementById('embed');
+            let uploadedFiles = [];
+
+            imagesInput.addEventListener('change', function () {
+                const filesArray = Array.from(imagesInput.files);
+                filesArray.sort((a, b) => a.name.localeCompare(b.name));
+                for (let i = 0; i < 5; i++) {
+                    if (filesArray[i] && checkImage(filesArray[i])) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                            document.querySelectorAll(`.preview5>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(filesArray[i]);
+                        uploadedFiles.push(filesArray[i]);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            });
+
+            function deleteImage(index) {
+                uploadedFiles.splice(index, 1);
+                for (let i = 0; i < 5; i++) {
+                    if (i < uploadedFiles.length) {
+                        const file = uploadedFiles[i];
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            }
+
+            mediaTypeInput.addEventListener('input', () => {
+                const mediaType = mediaTypeInput.value;
+                if (mediaType === 'single_image') {
+                    singleImageBox.style.display = 'block';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'embed') {
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'block';
+                }
+            });
+        </script>
+        <!-- wysiwyg -->
+        <script>
+            document.getElementById('fontSize').addEventListener('change', function() {
+                formatText('fontSize', this.value);
+            });
+            function formatText(command) {
+                if (command === 'fontSize') {
+                    document.execCommand('fontSize', false, arguments[1]);
+                } else {
+                    document.execCommand(command, false, null);
+                    const buttonId = command + 'ToggleButton';
+                    const button = document.getElementById(buttonId);
+                    button.classList.toggle('toggle-active');
+                }
+                document.getElementById('content').focus();
+            }
+            document.getElementById('content').addEventListener('paste', function(e) {
+                e.preventDefault();
+                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            });
+        </script>
+        <script>
+            // variables
+            var mainFilepath = '';
+            var filepaths = '';
+            var mediaRegType = '';
+
+            // elements
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const previewBox = document.getElementById('previewBox');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            openMediaModal = (type) => {
+                if (type === 'main') {
+                    mediaTypeInput.innerHTML = `
+                        <option value="single_image" selected>이미지</option>
+                    `;
+                } else {
+                    mediaTypeInput.innerHTML = `
+                        <option value="single_image" selected>이미지</option>
+                        <option value="embed">유튜브 동영상</option>
+                    `;
+                }
+                $('#mediaModal').modal('show');
+                mediaRegType = type;
+            }
+
+            setMedia = async () => {
+                var mediaType = mediaTypeInput.value;
+                filepaths = '';
+                if (mediaType == 'embed') {
+                    filepaths = embedInput.value;
+                } else {
+                    for (let file of uploadedFiles) {
+                        try {
+                            var filepathstring = await uploadFile(file);
+                            filepaths += filepathstring + ',';
+                        } catch (error) {
+                            console.error("File upload failed:", error);
+                        }
+                    }
+                    if (filepaths.length > 0) {
+                        filepaths = filepaths.slice(0, -1);
+                    }
+                }
+
+                if (mediaRegType == 'main') {
+                    previewBox.innerHTML = `
+                        <div class="post-img w-100" style="max-height: 300px; height: 28vw; background: url('${filepaths}') center/contain no-repeat black;"></div>
+                    `;
+                    mainFilepath = filepaths;
+                } else {
+                    if (mediaType === 'single_image') {
+                        contentInput.innerHTML += `<img src="${filepaths}" style='width: 100%;'>
+                        <div><br></div>
+                        <div><br></div>`;
+                    } else if (mediaType === 'embed') {
+                        contentInput.innerHTML += `
+                            <iframe style="width: 100%; height: 450px;" src="${filepaths}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            <div><br></div>
+                            <div><br></div>`;
+                    }
+                }
+            }
+
+            writeEvent = async () => {
+                var title = titleInput.value;
+                var content = contentInput.innerHTML;
+
+                if (title.length < 1 || content.length < 1) {
+                    return;
+                }
+
+                // write
+                await setData({
+                    model: 'POST',
+                    id: '',
+                    field_value: JSON.stringify({
+                        author_id: '{{account.id}}',
+                        main_image: mainFilepath,
+                        board: 'event',
+                        title: title,
+                        content: content,
+                    })
+                }).then(async (data) => {
+                    var dbData = JSON.parse(data.db);
+                    var pk = dbData[0].pk;
+                    var fields = dbData[0].fields;
+
+                    window.location.href = '/supervisor_events';
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>

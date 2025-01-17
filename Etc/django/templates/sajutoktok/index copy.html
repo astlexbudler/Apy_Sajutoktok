@@ -1,0 +1,311 @@
+{% extends 'sajutoktok/_base.html' %}
+<div class="main-wrapper">
+
+  <!-- 헤더 -->
+  {% include "sajutoktok/parts/header.html" %}
+
+  <section class="m-0 p-0 py-4" style="min-height: 100vh;">
+
+    <!-- notices -->
+    <div class="container">
+      <div class="mt-2 mb-5">
+        <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+          <div style="display: inline-block; text-align: left;">
+            <h5>공지사항</h5>
+          </div>
+          <div style="display: inline-block; text-align: right;">
+            <span class="text-dark" style="font-size: 16px;">
+              <a href="/notices" class="small">
+                < 더보기
+              </a>
+            </span>
+          </div>
+        </div>
+        <div class="row">
+          {% if notices|length < 1 %}
+          <p class="small">
+            현재 등록된 공지사항이 없습니다.
+          </p>
+          {% endif %}
+          {% for notice in notices %}
+          <div class="py-2">
+            <a href="/notice?id={{notice.id}}" class="text-dark">
+              <p class="text-dark mb-0">
+                {{notice.title}}
+              </p>
+              <small>
+                사주톡톡 | {{notice.dt}} | 조회 {{notice.views}}
+              </small>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <div class="container p-0 p-lg-2">
+
+      <!-- events -->
+      {% if events|length > 0 %}
+      <div class="owl-carousel owl-theme text-center shadow">
+        {% for event in events %}
+        <div class="item">
+          <a href="/event?id={{event.id}}">
+            <div class="card-body">
+              <div class="bg-dark">
+                <div class="post-img w-100" style="min-height: 300px; height: 20vw; background: url('{{event.main_image}}') center/contain no-repeat black;"></div>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- category -->
+      <div class="cart-table">
+        <div class="table-responsive">
+          <table class="table">
+            <tbody>
+              <tr>
+                <td class="product-name p-1 pb-2">
+                  <a href="javascript: trySearch('all', '{{request.GET.search_keyword}}');">
+                    <div style="width: 180px;" class="text-center p-2">
+                      <img src="/static/_sajutoktok/img/content/all_counselors.png" class="w-100" style="display: inline;">
+                    </div>
+                    {% if request.GET.category == 'all' or request.GET.category == None %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: #247bfe;"></div>
+                    {% else %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: transparent;"></div>
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="product-name p-1">
+                  <a href="javascript: trySearch('saju', '{{request.GET.search_keyword}}');">
+                    <div style="width: 180px;" class="text-center p-2">
+                      <img src="/static/_sajutoktok/img/content/saju.png" class="w-100" style="display: inline;">
+                    </div>
+                    {% if request.GET.category == 'saju' %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: #247bfe;"></div>
+                    {% else %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: transparent;"></div>
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="product-name p-1">
+                  <a href="javascript: trySearch('taro', '{{request.GET.search_keyword}}');">
+                    <div style="width: 180px;" class="text-center p-2"></div>
+                      <img src="/static/_sajutoktok/img/content/taro.png" class="w-100" style="display: inline;">
+                    </div>
+                    {% if request.GET.category == 'taro' %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: #247bfe;"></div>
+                    {% else %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: transparent;"></div>
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="product-name p-1"></td>
+                  <a href="javascript: trySearch('jum', '{{request.GET.search_keyword}}');"></a>
+                    <div style="width: 180px;" class="text-center p-2"></div>
+                      <img src="/static/_sajutoktok/img/content/jum.png" class="w-100" style="display: inline;">
+                    </div>
+                    {% if request.GET.category == 'jum' %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: #247bfe;"></div>
+                    {% else %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: transparent;"></div>
+                    {% endif %}
+                  </a>
+                </td>
+                <td class="product-name p-1">
+                  <a href="javascript: trySearch('recommend', '{{request.GET.search_keyword}}');">
+                    <div style="width: 180px;" class="text-center p-2">
+                      <img src="/static/_sajutoktok/img/content/review2.png" class="w-100" style="display: inline;">
+                    </div>
+                    {% if request.GET.category == 'recommend' %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: #247bfe;"></div>
+                    {% else %}
+                    <div style="width: 160px; margin-left: 10px; height: 3px; background-color: transparent;"></div>
+                    {% endif %}
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- search bar -->
+      <div class="form-group position-relative" onkeyup="if(event.keyCode == 13) trySearch('{{request.GET.category}}', document.querySelector('#searchKeyword').value);"></div>
+        <input id="searchKeyword" class="form-control" style="border-radius: 0px;" placeholder="검색어를 입력해주세요." value="{{request.GET.searchKeyword}}">
+        <a href="javascript: trySearch('{{request.GET.category}}', document.querySelector('#searchKeyword').value);" class="position-absolute" style="right: 15px; top: 50%; transform: translateY(-50%); font-size: 24px;">
+          <i class="fa-solid fa-search"></i>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- search result -->
+    <div class="container" style="min-height: 100vh;">
+      {% if counselors|length < 1 %}
+      <p class="small">
+        검색 결과가 없습니다.
+      </p>
+      {% endif %}
+      <div class="row" id="infiniteBox">
+        {% for counselor in counselors %}
+        <div class="my-2 pb-3 row" style="cursor: pointer;" onclick="document.location.href='/counselor?id={{counselor.id}}';">
+          <div class="mb-4" style="display: flex; cursor: pointer;" onclick="document.location.href='/supervisor_counselor?id={{counselor.id}}';">
+            <div style="display: inline-block; text-align: left;" class="me-4"></div>
+              <div class="shadow" style="max-width: 200px; width: 27vw; max-height: 200px; height: 27vw; border-radius: 50%; background: url('{{counselor.photo}}') center/cover white;"></div>
+            </div>
+            <div style="display: inline-block;">
+              <!-- status -->
+              {% if counselor.status == 'offline' %}
+              <span class="badge bg-secondary">오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+              {% elif counselor.status == 'online' %}
+              <span class="badge bg-primary">상담가능 <i class="fa-solid fa-phone"></i></span>
+              {% endif %}
+
+              <p class="small mt-2 mb-0">
+                {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                상담 서비스가 없습니다.
+                {% endif %}
+                {% for service in counselor.services %}
+                {% if service == 'saju' %}
+                # 사주 
+                {% elif service == 'taro' %}
+                # 타로 
+                {% elif service == 'jum' %}
+                # 신점 
+                {% endif %}
+                {% endfor %}
+              </p>
+              <span>
+                <span class="h5 me-2">
+                  {{counselor.nickname}}<br>
+                </span>
+                <small>
+                  <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> <b><span class="price">{{counselor.price}}</span>P</b> (30초)
+                </small>
+              </span>
+              <p class="text-dark mt-2">
+                {{counselor.introduce}}
+              </p>
+            </div>
+          </div>
+          <p class="small"></p>
+            <i class="fa-solid fa-comment"></i> 대화:{{counselor.chats_count}} | 
+            <i class="fa-solid fa-message"></i> 리뷰:{{counselor.reviews_count}} | 
+            <i class="fa-solid fa-heart"></i> 찜:{{counselor.likes_count}} | 
+            <i class="fa-regular fa-note-sticky"></i> 게시글:{{counselor.posts_count}}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </section>
+
+</div>
+<script>
+  // var
+  var page = 1;
+
+  // elements
+  const searchKeywordInput = document.querySelector("#searchKeyword");
+  const infiniteBox = document.querySelector("#infiniteBox");
+
+  window.onload = () => {
+    console.log(`Window loaded at ${getNowDt()}`);
+
+    document.querySelectorAll('.price').forEach(price => {
+      price.innerHTML = price.innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    });
+
+    setInterval(() => {
+      infiniteScroll();
+    }, 5000)
+  }
+
+  trySearch = (category, searchKeyword) => {
+    window.location.href = `/?category=${category}&searchKeyword=${searchKeyword}`;
+    return
+  }
+
+  infiniteScroll = async () => {
+    var maxScroll = document.body.scrollHeight;
+    var nowScroll = window.pageYOffset;
+
+    if (maxScroll - nowScroll < 1500) {
+      page = page + 1;
+
+      var formData = new FormData();
+      formData.append('page', page);
+      await fetch(window.location.href, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrftoken
+        },
+        body: formData
+      })
+      .then((rasponse) => response.json())
+      .then((data) => {
+        var counselors = data['counselors'];
+
+        if (counselors.length > 0) {
+          html = '';
+          for (var i = 0; i < counselors.length; i++) {
+            var counselor = counselors[i];
+            html += `
+            <div class="w-100 my-2 pb-3">
+              <div class="mb-4" style="display: flex; cursor: pointer;" onclick="document.location.href='/counselor?id=${counselor.id}';">
+                <div style="display: inline-block; text-align: left;" class="me-4">
+                  <div class="shadow" style="max-width: 200px; width: 27vw; max-height: 200px; height: 27vw; border-radius: 50%; background: url('${counselor.photo}') center/cover white;"></div>
+                </div>
+                <div style="display: inline-block;">
+                  ${counselor.status == 'offline' ? `
+                  <p>
+                    <span class="h5">${counselor.nickname}</span> <small>상태: <span class="text-danger">오프라인</span></small><br>
+                    <small>연락처:${counselor.tel} 이메일:${counselor.id}</small>
+                  </p>
+                  ` : `
+                  <p>
+                    <span class="h5">${counselor.nickname}</span> <span class="text-primary small">온라인(상담가능)<br></span>
+                  </p>
+                  `}
+                  <p class="small">
+                    ${counselor.services.map(service => {
+                      if (service == 'taro') {
+                        return `<span class="text-dark"># 타로</span>`;
+                      } else if (service == 'saju') {
+                        return `<span class="text-dark"># 사주</span>`;
+                      } else if (service == 'jum') {
+                        return `<span class="text-dark"># 신점</span>`;
+                      }
+                    })}
+                    <br>
+                  </p>
+                  <p class="text-dark">
+                    ${counselor.intro}
+                  </p>
+                </div>
+              </div>
+              <small>
+                <i class="fa-solid fa-comment"></i> 대화:${counselor.chat_room_count} | 
+                <i class="fa-solid fa-message"></i> 리뷰:${counselor.review_count} | 
+                <i class="fa-solid fa-heart"></i> 찜:${counselor.point} |
+                <i class="fa-regular fa-note-sticky"></i> 게시글:${counselor.post_count}
+              </small>
+            </div>
+            `;
+          }
+          infiniteBox.innerHTML += html;
+        } else {
+          page = page - 1;
+        }
+      });
+    }
+  }
+
+</script>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.location.href='/';">
+                        뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            포인트 충전
+                        </h5>
+                        <small>
+                            아래 내용을 확인하시고 결제를 진행해주세요.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+    
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div class="row w-100">
+                                        <div class="col-12 col-md-6">
+                                            <div class="post-meta mt-2">
+                                                <img class="w-100 mb-3" src="{{item.photos.0}}">
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6 p-4">
+                                            <div class="d-md-none mt-4"></div>
+                                            <h5>{{item.name}}</h5>
+    
+                                            <div class="text-end mt-2">
+                                                {% if item.discount_percentage != '0' %}
+                                                <h6><del><span class="price">{{item.before_discount_price}}</span>원</del> <small>(-{{item.discount_percentage}}%)</small></h6>
+                                                {% endif %}
+                                                <h6 class="text-danger">
+                                                    <span class="price">{{item.after_discount_price}}</span>원
+                                                </h6>
+    
+                                                <div class="my-4 text-start">
+                                                    {{item.description|safe}}
+                                                </div>
+    
+                                                <div style="display: flex;">
+                                                    <div style="display: inline-block;">
+                                                        <p class="text-start">
+                                                            <b>상품(서비스) 제공 약관</b><br>
+                                                            <small>
+                                                                {{item.terms}}
+                                                            </small>
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+    
+                                <hr class="my-4">
+    
+                                <div class="row">
+                                    <div class="mb-4 text-start">
+                                        <h5 class="font-weight-normal mb-0">구매자 정보</h5>
+                                        <p class="mb-0">
+                                            상품(서비스) 결제를 위해 아래 정보를 입력해주세요.<br>
+                                            <small class="text-danger">※ 이메일을 정확히 입력해주세요.</small>
+                                        </p>
+                                    </div>
+    
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>이메일</label> <small class="text-danger">* 필수</small>
+                                            <input type="text" class="form-control" id="customerEmail" placeHolder="your@email.com">
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label>연락처</label>
+                                            <input type="text" class="form-control" id="customerTel" placeHolder="01012345678">
+                                        </div>
+                                    </div>
+    
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <input type="checkbox" class="custom-control-input" id="termsAgree">
+                                            <label class="custom-control-label display-30" for="termsAgree">개인정보 처리방침 및 서비스 이용약관에 동의합니다. <a href="javascript: window.open('/terms');"><u>이용약관 보기</u></a></label>
+                                        </div>
+                                    </div>
+    
+                                </div>
+    
+                                <hr class="my-4">
+    
+                                <div class="d-none" id="purchaseBox">
+    
+                                    <!-- 결제 UI, 이용약관 UI 영역
+                                    ================================================== -->
+                                    <div id="payment-method"></div>
+                                    <div id="agreement"></div>
+    
+                                    <!-- 결제하기 버튼
+                                    ================================================== -->
+                                    <button id="payment-button" class="butn style-one fill mt-4 mb-0 bg-primary col-12 col-lg-2">결제하기</button>
+    
+                                </div>
+                                
+                                <div class="text-end">
+                                    <img src="/static/_payment/img/logos/applify_logo2.png" style="width: 100px" class="mt-4 mt-md-0"/>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                        <div style="display: inline-block; text-align: left;">
+                            <a class="small" href="javascript: window.location.href='/supervisor_users';">
+                                < 사용자 페이지로
+                            </a>
+                        </div>
+                        <div style="display: inline-block; text-align: right;">
+                            <a class="small text-danger" href="javascript: deleteCounselor('{{counselor.id}}');">
+                                <i class="fa fa-xmark"></i> 삭제하기
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            사용자 계정
+                        </h5>
+                        <small>
+                            사주톡톡의 사용자 계정을 관리합니다.<br>
+                            (*주의) 사용자의 프로필 정보를 강제로 수정할 수 있습니다.
+                        </small>
+                    </div>
+
+                    <!-- profile -->
+                    <div class="my-4">
+                        <div class="row">
+
+                            <div class="col-12 mt-2">
+                                <div class="account-sidebar">
+                                    <div class="account-widget personal-data">
+
+                                        <!-- title -->
+                                        <div class="mt-2 mb-5">
+                                            <h6>프로필</h6>
+                                            <small>
+                                                사용자 프로필
+                                            </small>
+                                        </div>
+
+                                        <!-- detail -->
+                                        <div class="my-4">
+                                            <a href="javascript: new bootstrap.Modal(accountNicknameRewriteModal).show();">
+                                                <span class="h5">{{user.nickname}}</span> <small><i class='fa fa-pen'></i></small><br>
+                                            </a>
+                                            <p class="small">
+                                                <a href="javascript: new bootstrap.Modal(accountTelRewriteModal).show();">
+                                                    연락처: 
+                                                    {% if user.tel == '' %}
+                                                    등록된 연락처 정보가 없습니다. <i class='fa fa-pen'></i><br>
+                                                    {% else %}
+                                                    {{user.tel}} <i class='fa fa-pen'></i><br>
+                                                    {% endif %}
+                                                </a>
+                                                <a href="javascript: new bootstrap.Modal(accountEmailRewriteModal).show();">
+                                                    이메일: {{user.id}}
+                                                </a>
+                                            </p>
+
+                                        </div>
+
+                                        <!-- buttons -->
+                                        <div class="my-4 py-4">
+                                            <a href="/chat?opponent={{user.id}}" class="btn btn-primary me-2">
+                                                <i class="fa fa-comment"></i> 메세지 보내기
+                                            </a>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- qnas -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+
+                                <!-- title -->
+                                <div class="my-4">
+
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            1:1 문의
+                                        </h6>
+                                        <small>
+                                            사용자가 작성한 1:1 문의를 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <div class="my-4">
+                                        {% if qnas|length < 1 %}
+                                        <p class="small">
+                                            문의 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for qna in qnas %}
+                                        <div class="col-md-12 py-3">
+                                            <a href="#" class="text-dark">
+                                                <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                    <div style="display: inline-block; text-align: left;">
+                                                        <p class="text-dark m-0">
+                                                            {% if qna.comment|length < 1 %}
+                                                            [답변 대기중] 
+                                                            {% else %}
+                                                            [답변완료] 
+                                                            {% endif %}
+                                                            {{qna.title}}
+                                                        </p>
+                                                    </div>
+                                                    <div style="display: inline-block; text-align: right;">
+                                                        <div>
+                                                            <a class="text-danger small" href="javascript: deletePost('{{qna.id}}');">
+                                                                <i class="fa fa-xmark"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <small class="text-secondary">
+                                                    {{qna.author.nickname}} | {{qna.dt}}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- reviews -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+                                <div class="my-4">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            리뷰
+                                        </h6>
+                                        <small>
+                                            사용자가 작성한 리뷰를 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+                                        {% if reviews|length < 1 %}
+                                        <p class="small">
+                                            리뷰 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for review in reviews %}
+                                        <div class="py-3">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <div>
+                                                        {% if review.star == 1 %}
+                                                        <span class="text-dark bg-light p-1 px-2 small rounded">
+                                                            1점 
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </span>
+                                                        {% elif review.star == 2 %}
+                                                        <span class="text-dark bg-light p-1 px-2 small rounded">
+                                                            2점 
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </span>
+                                                        {% elif review.star == 3 %}
+                                                        <span class="text-dark bg-light p-1 px-2 small rounded">
+                                                            3점 
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </span>
+                                                        {% elif review.star == 4 %}
+                                                        <span class="text-dark bg-light p-1 px-2 small rounded">
+                                                            4점 
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star"></i>
+                                                        </span>
+                                                        {% elif review.star == 5 %}
+                                                        <span class="text-dark bg-light p-1 px-2 small rounded">
+                                                            5점 
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                            <i class="fa fa-star text-warning"></i>
+                                                        </span>
+                                                        {% endif %}
+                                                    </div>
+                                                    <small class="text-secondary">
+                                                        {{review.user.nickname}} | {{review.dt}}
+                                                    </small>
+                                                    <p class="text-dark">
+                                                        {{review.content}}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small text-danger" href="javascript: deleteReview('{{review.id}}');">
+                                                        <i class="fa fa-xmark"></i> 삭제
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- purchases -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+                                <div class="my-4">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>
+                                            결제 내역
+                                        </h6>
+                                        <small>
+                                            사용자의 결제 내역을 확인합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+                                        {% if purchases|length < 1 %}
+                                        <p class="small">
+                                            결제 내역이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for purchase in purchases %}
+                                        <div class="py-3">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <small class="text-secondary">
+                                                        {{review.user.nickname}} | {{review.dt}}
+                                                    </small>
+                                                    <p class="text-dark">
+                                                        {{review.content}}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small text-danger" href="javascript: deleteReview('{{review.id}}');">
+                                                        <i class="fa fa-xmark"></i> 삭제
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- ACCOUNT: nickname -->
+        <div class="modal fade" id="accountNicknameRewriteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">닉네임 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>닉네임</label>
+                            <input type="text" class="form-control" id="nickname" value="{{user.nickname}}">
+                            <smal class="text-secondary display-30">최대 20글자</small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="rewriteAccountNickname();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT: tel -->
+        <div class="modal fade" id="accountTelRewriteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">연락처 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>연락처</label>
+                            <input type="text" class="form-control" id="tel" value="{{user.tel}}">
+                            <smal class="text-secondary display-30">
+                                연락처는 상담사 가입 시 입력한 연락처를 입력해주세요.<br>
+                                (-) 없이 숫자만 입력해주세요.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="rewriteAccountTel();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACCOUNT: email -->
+        <div class="modal fade" id="accountEmailRewriteModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">이메일 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>이메일</label>
+                            <input type="text" class="form-control" id="email" value="{{user.id}}">
+                            <smal class="text-secondary">최대 64글자<br></small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="rewriteAccountEmail();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var modifingTable = '';
+            var modifingField = '';
+
+            // elements
+            const nicknameInput = document.getElementById('nickname');
+            const telInput = document.getElementById('tel');
+            const emailInput = document.getElementById('email');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            rewriteAccountNickname = async () => {
+                var nickname = nicknameInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('nickname', nickname);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.reload();
+            }
+
+            rewriteAccountTel = async () => {
+                var tel = telInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('tel', tel);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.reload();
+            }
+
+            rewriteAccountEmail = async () => {
+                var email = emailInput.value;
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('email', email);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.href = `/supervisor_user?id=${email}`;
+            }
+
+            deleteAccount = async () => {
+                var id = '{{user.id}}';
+
+                var formData = new FormData();
+                formData.append('id', id);
+                await fetch('/api/delete_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                });
+                window.location.href = '/supervisor_users';
+            }
+
+        </script>
+
+    </body>
+
+</html>

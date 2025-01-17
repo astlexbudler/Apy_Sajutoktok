@@ -1,0 +1,67 @@
+<div class="fixed-bottom navbar navbar-expand border-top custom-nav" style="background-color: rgba(255, 255, 255, 0.9);">
+    <div class="container row">
+        <div class="text-center custom-nav-item" style="width: 20vw">
+            <a href="/notices">
+                <div>
+                    <img src="/static/_sajutoktok/img/icon/megaphone.png" style="max-width: 28px; max-height: 28px; width: 7vw; height: 7vw;">
+                    <p class="m-0 text-dark" style="font-size: 12px;">
+                        공지사항
+                    </p>
+                </div>
+            </a>
+        </div>
+        {% if account.id != '' %}
+        <div class="text-center custom-nav-item" style="width: 20vw">
+            <a href="javascript: logout();">
+                <div>
+                    <img src="/static/_sajutoktok/img/icon/logout.png" style="max-width: 30px; max-height: 30px; width: 7vw; height: 7vw;">
+                    <p class="m-0 text-dark" style="font-size: 12px;">
+                        로그아웃
+                    </p>
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center custom-nav-item" style="width: 20vw">
+            <a href="/login">
+                <div>
+                    <img src="/static/_sajutoktok/img/icon/avatar.png" style="max-width: 36px; max-height: 36px; width: 9vw; height: 9vw;">
+                    <p class="m-0 text-dark" style="font-size: 12px;">
+                        로그인
+                    </p>
+                </div>
+            </a>
+        </div>
+        {% endif %}
+        <div class="text-center custom-nav-item-center" style="width: 20vw">
+            <a href="/">
+                <div style="max-width: 60px; width: 14vw;">
+                    <img src="/static/_sajutoktok/img/logo.png" style="position: absolute; width: 60px; left: calc(50% - 30px); top: -10px;">
+                </div>
+            </a>
+        </div>
+
+        <div class="text-center custom-nav-item" style="width: 20vw">
+            <a href="/all_reviews">
+                <div>
+                    <img src="/static/_sajutoktok/img/icon/star.png" style="max-width: 36px; max-height: 36px; width: 9vw; height: 9vw;">
+                    <p class="m-0 text-dark" style="font-size: 12px;">
+                        리뷰
+                    </p>
+                </div>
+            </a>
+        </div>
+        <div class="text-center custom-nav-item" style="width: 20vw">
+            <a href="/profile_user_point_shop">
+                <div>
+                    <img src="/static/_sajutoktok/img/icon/coin.png" style="max-width: 36px; max-height: 36px; width: 9vw; height: 9vw;">
+                    <p class="m-0 text-dark" style="font-size: 12px;">
+                        포인트
+                    </p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+
+<a href="#!" class="scroll-to-top" style="bottom: 110px;"><i class="fas fa-angle-up" aria-hidden="true"></i></a>

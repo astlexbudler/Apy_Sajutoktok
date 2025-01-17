@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="p-0 py-2 bg-light" style="min-height: 100vh;">
+                <div class="container d-flex flex-column">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <div class="col-12 col-lg-8">
+
+                            <!-- goback -->
+                            <a href="javascript: window.location.href='/supervisor_notices';" class="small">
+                                <i class="fa fa-chevron-left"></i> 뒤로 가기
+                            </a>
+
+                            <div class="card p-4">
+
+                                <!-- title -->
+                                <div class="mt-2 mb-5">
+                                    <h5>환불 요청</h5>
+                                    <small>
+                                        포인트 환불 요청 작성
+                                    </small>
+                                </div>
+
+                                <!-- form -->
+                                <div class="row">
+                                    <div class="col-12">
+
+                                        <!-- title -->
+                                        <div class="form-group">
+                                            <label>결제 ID</label>
+                                            <input type="text" class="form-control" id="purchaseId" value="{{purchase.id}}" readonly>
+                                        </div>
+
+                                        <!-- dt -->
+                                        <div class="form-group">
+                                            <label>결제 일시</label>
+                                            <input type="text" class="form-control" id="dt" value="{{purchase.dt}}" readonly>
+                                        </div>
+
+                                        <!-- WYSIWYG editor -->
+                                        <div class="row mt-2">
+                                            <div class="form-group">
+                                                <label>내용</label>
+                                                <div class="editor-controls">
+                                                    <select id="fontSize" class="control-select">
+                                                        <option value="1">매우 작게</option>
+                                                        <option value="2">작게</option>
+                                                        <option value="3" selected>보통</option>
+                                                        <option value="4">큼</option>
+                                                        <option value="5">더 큼</option>
+                                                        <option value="6">매우 큼</option>
+                                                        <option value="7">최대</option>
+                                                    </select>
+                                                    <button id="boldToggleButton" class="editor-button" onclick="formatText('bold')">B</button>
+                                                    <button id="underlineToggleButton" class="editor-button" onclick="formatText('underline')">U</button>
+                                                    <button id="italicToggleButton" class="editor-button" onclick="formatText('italic')">I</button>
+                                                </div>
+                                                <div contenteditable="true" id="content"></div>
+                                                <small>
+                                                    포인트 환불 요청 사유를 작성해주세요.<br>
+                                                    만약 이미 포인트를 사용하셨다면, 환불이 불가능할 수 있습니다.
+                                                </small>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div class="row mt-2">
+                                    <div class="col-md-12 center">
+                                        <button onclick="writeRefund();" class="butn style-one fill d-block mt-4 mb-0 bg-primary col-12 col-lg-2">
+                                            환불 요청
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <!-- wysiwyg -->
+        <script>
+            document.getElementById('fontSize').addEventListener('change', function() {
+                formatText('fontSize', this.value);
+            });
+            function formatText(command) {
+                if (command === 'fontSize') {
+                    document.execCommand('fontSize', false, arguments[1]);
+                } else {
+                    document.execCommand(command, false, null);
+                    const buttonId = command + 'ToggleButton';
+                    const button = document.getElementById(buttonId);
+                    button.classList.toggle('toggle-active');
+                }
+                document.getElementById('content').focus();
+            }
+            document.getElementById('content').addEventListener('paste', function(e) {
+                e.preventDefault();
+                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            });
+        </script>
+        <script>
+            // variables
+            var filepaths = '';
+
+            // elements
+            const titleInput = document.getElementById('title');
+            const contentInput = document.getElementById('content');
+            const previewBox = document.getElementById('previewBox');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            mediaTypeInput.addEventListener('input', () => {
+                const mediaType = mediaTypeInput.value;
+                if (mediaType === 'single_image') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'block';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'selectable_images') {
+                    multifulImageBox.style.display = 'block';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'embed') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'block';
+                }
+            });
+
+            setMedia = async () => {
+                var mediaType = mediaTypeInput.value;
+                filepaths = '';
+                if (mediaType == 'embed') {
+                    filepaths = embedInput.value;
+                } else {
+                    for (let file of uploadedFiles) {
+                        try {
+                            var filepathstring = await uploadFile(file);
+                            filepaths += filepathstring + ',';
+                        } catch (error) {
+                            console.error("File upload failed:", error);
+                        }
+                    }
+                    if (filepaths.length > 0) {
+                        filepaths = filepaths.slice(0, -1);
+                    }
+                }
+
+                if (mediaType === 'single_image') {
+                    previewBox.innerHTML = `
+                        <img src="${filepaths}" class="w-100 my-4">
+                    `;
+                } else if (mediaType === 'selectable_images') {
+                    filePathList = filepaths.split(',');
+                    var html = `
+                        <div class="xzoom-container mt-4">
+                            <img class="xzoom5 w-100" id="xzoom-magnific" src="${filePathList[0]}" xoriginal="${filePathList[0]}">
+                        </div>
+                        <div class="xzoom-thumbs my-4 text-start">
+                    `;
+                    for (let i = 0; i < filePathList.length; i++) {
+                        html += `
+                            <a href="${filePathList[i]}" style="display: inline-block;">
+                                <div class="xzoom-gallery5" src="${filePathList[i]}" style="width: 80px; height: 60px; background: url('${filePathList[i]}') center/contain no-repeat black; box-shadow: 0px 0px 3px gainsboro;"></div>
+                            </a>
+                        `;
+                    }
+                    html += `</div>`;
+                    previewBox.innerHTML = html;
+                } else if (mediaType === 'embed') {
+                    previewBox.innerHTML = `
+                        <iframe width="100%" height="450px;" src="${filepaths}" class="my-4" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    `;
+                }
+            }
+
+            writeNotice = async () => {
+                var title = titleInput.value;
+                var content = contentInput.innerHTML;
+                if (title.length < 1 || content.length < 1) {
+                    return;
+                }
+
+                // write
+                await setData({
+                    model: 'POST',
+                    id: '',
+                    field_value: JSON.stringify({
+                        account_id: '{{account.id}}',
+                        board: 'notice',
+                        title: title,
+                        content: content,
+                    })
+                }).then(async (data) => {
+                    var dbData = JSON.parse(data.db);
+                    var pk = dbData[0].pk;
+                    var fields = dbData[0].fields;
+
+                    if (filepaths.length > 0) {
+                        await setData({
+                            model: 'MEDIA',
+                            id: '',
+                            field_value: JSON.stringify({
+                                post_id: pk,
+                                index: 0,
+                                media_type: mediaTypeInput.value,
+                                media: filepaths
+                            })
+                        }).then((data) => {
+                            window.location.href = '/supervisor_notices';
+                        });
+                    } else {
+                        window.location.href = '/supervisor_notices';
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>

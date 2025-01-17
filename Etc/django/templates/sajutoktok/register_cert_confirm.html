@@ -1,0 +1,72 @@
+{% extends 'sajutoktok/_base.html' %}
+{% block content %}
+<div class="main-wrapper">
+
+  <!-- 헤더 -->
+  <!-- 로그인 페이지는 헤더 없음 -->
+
+  <section class="bg-light p-0 py-2" style="min-height: 100vh;">
+    <div class="container d-flex flex-column">
+      <div class="row align-items-center justify-content-center min-vh-100">
+        <div class="col-12 col-lg-8">
+
+          <!-- 뒤로가기 버튼 -->
+          <a class="small" href="javascript: window.location.href = '/login';">
+            <i class="fas fa-chevron-left"></i> 로그인 페이지로
+          </a>
+
+          <!-- 입력폼 카드 -->
+          <div class="card p-4">
+
+            <!-- 폼 타이틀 -->
+            <div class="my-4 text-center">
+              <h2 class="font-weight-normal mb-0">회원가입</h2>
+              <p class="mb-0">회원가입을 위해 이메일을 인증해주세요.</p>
+            </div>
+
+            <!-- 폼 입력창 -->
+            <form id="form" method="post" action="/register_select">
+              {% csrf_token %}
+              <input class="d-none" name="email" value="{{ email }}">
+
+              <!-- 인증번호 -->
+              <div class="form-group">
+                <label>인증번호</label> <small class="text-danger">인증번호를 확인해주세요.</small>
+                <input type="text" id="code" name="code" class="form-control" placeholder="연락처를 입력하세요.">
+                <small>
+                  이메일로 발송된 인증번호를 입력해주세요. 이메일을 받지 못했다면 스팸메일함을 확인해주세요.
+                </small>
+              </div>
+
+            </form>
+
+            <!-- 폼 제출 버튼 -->
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <button onclick="checkCertCode();" class="butn style-one fill mt-4 mb-0 bg-primary">
+                  인증번호 확인
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    window.onload = () => {
+      console.log(`Window loaded at ${getNowDt()}`);
+    }
+
+    // 인증번호 확인
+    checkCertCode = () => {
+      if (document.getElementById('code').value.length != 6) {
+        return
+      }
+      document.querySelector('#form').submit();
+    }
+
+  </script>
+</div>
+{% endblock %}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        <i class="fa fa-chevron-left"></i> 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <div class="mb-4" style="display: flex; justify-content: space-between; white-space: nowrap;">
+                            <div style="display: inline-block; text-align: left;">
+                                <h5>{{qna.title}}</h5>
+                                <small>
+                                    {{qna.author.nickname}} | {{qna.dt}}
+                                </small>
+                            </div>
+                            <div style="display: inline-block; text-align: right;">
+                                <a class="small text-danger" href="javascript: deletePost('{{qna.id}}');">
+                                    <i class="fa fa-xmark"></i> 삭제
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- content -->
+                    <div class="post my-4" style="min-height: 100vh;">
+                        <div class="content" style="margin-bottom: 200px;">
+                            <div class="post-cont">
+                                {{qna.content|safe}}
+                            </div>
+                        </div>
+
+                        <!-- answer -->
+                        <div class="content">
+                            <div class="post-cont">
+                                <label>
+                                    답변
+                                </label>
+                                <div class="editor-controls">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <select id="fontSize" class="control-select">
+                                                <option value="1">매우 작게</option>
+                                                <option value="2">작게</option>
+                                                <option value="3" selected>보통</option>
+                                                <option value="4">큼</option>
+                                                <option value="5">더 큼</option>
+                                                <option value="6">매우 큼</option>
+                                                <option value="7">최대</option>
+                                            </select>
+                                            <button id="boldToggleButton" class="editor-button" onclick="formatText('bold')">B</button>
+                                            <button id="underlineToggleButton" class="editor-button" onclick="formatText('underline')">U</button>
+                                            <button id="italicToggleButton" class="editor-button" onclick="formatText('italic')">I</button>
+                                            <button id="uploadMediaButton" class="editor-button" onclick="$('#mediaModal').modal('show');">
+                                                <i class="fa fa-image"></i>
+                                            </button>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <button class="butn style-one bg-primary p-1 px-2 text-white" onclick="setWysiwyg();">
+                                                답변 저장
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div contenteditable="true" id="content">
+                                    {{qna.comments.0.content|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var postId = '{{qna.id}}';
+            var answerId = '{{qna.comments.0.id}}';
+
+            // elements
+            const contentInput = document.getElementById('content');
+
+            // functionss
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            setWysiwyg = async () => {
+                var content = contentInput.innerHTML;
+
+                if (content == '') {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">답변 입력</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    답변 내용을 입력해주세요.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `error`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``
+                    });
+                    return
+                }
+
+                if (answerId.length > 1) {
+                    await setData({
+                        model: 'COMMENT',
+                        id: answerId,
+                        field_value: JSON.stringify({
+                            post_id: postId,
+                            author_id: '{{account.id}}',
+                            content: content
+                        })
+                    }).then(() => {
+                        swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">답변 수정</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        해당 1:1 문의글의 답변이 수정되었습니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    });
+                } else {
+                    await setData({
+                        model: 'COMMENT',
+                        id: "",
+                        field_value: JSON.stringify({
+                            content: content,
+                            author_id: '{{account.id}}',
+                            post_id: postId
+                        })
+                    }).then(() => {
+                        swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">답변 등록</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        해당 1:1 문의글에 답변이 등록되었으며, 해당 1:1 문의글은 답변완료 상태로 변경되었습니다.<br>
+                                        <small class="text-primary">
+                                            문의 작성자에게 답변 완료 알림이 전송되었습니다.
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    });
+                }
+            }
+
+            deletePost = async (postId) => {
+                await Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">1:1 문의글 삭제</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                이 1:1 문의글을 삭제하시겠습니까?
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `삭제하기`,
+                    confirmButtonColor: `#dc3545`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await deleteData({
+                            model: 'COMMENT',
+                            id: answerId
+                        });
+                        await deleteData({
+                            model: 'POST',
+                            id: postId
+                        });
+                        Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">삭제 완료</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        해당 1:1 문의글이 삭제되었습니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``,
+                        }).then(() => {
+                            window.history.back();
+                        });
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>

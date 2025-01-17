@@ -1,0 +1,64 @@
+/* color mode */
+.color-mode .dropstart .dropdown-toggle:before{
+    display: none;
+}
+.color-mode .dropdown-menu.show {
+    display: block !important;
+}
+
+.color-mode .dropdown-menu {
+    display: none !important;
+    z-index: 9999;
+}
+
+.color-mode .dropdown .btn {
+    border: none;
+}
+
+.color-mode .dropdown-toggle:after {
+    display: none;
+}
+
+@media (max-width: 350px) {
+    .custom-nav-item {
+        width: 25vw !important;
+    }
+    .custom-nav-item span {
+        display: none;
+    }
+    .custom-nav-item-center {
+        display: none;
+    }
+}
+
+@media (min-width: 786px) {
+    .custom-nav {
+        display: none !important;
+    }
+}
+
+/* WYSIWYG Editor */
+.editor-controls select, .editor-controls button {
+    margin-right: 5px;
+}
+.editor-button {
+    padding: 4px 12px;
+    border: 1px solid gainsboro;
+    background-color: white;
+}
+.toggle-active {
+    background-color: lightgray;
+}
+#content {
+    width: 100%;
+    min-height: 500px;
+    margin-top: 10px;
+    font-size: 16px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    padding: 0.375rem 0.75rem;
+}
+.control-select {
+    padding: 5px 10px;
+    border: 1px solid gainsboro;
+}

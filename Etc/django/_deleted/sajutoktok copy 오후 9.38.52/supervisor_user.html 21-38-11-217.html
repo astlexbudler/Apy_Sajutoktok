@@ -1,0 +1,1024 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                        <div style="display: inline-block; text-align: left;">
+                            <a class="small" href="javascript: window.location.href='/supervisor_users';">
+                                < 사용자 페이지로
+                            </a>
+                        </div>
+                        <div style="display: inline-block; text-align: right;">
+                            <a class="small text-danger" href="javascript: deletUser('{{user.id}}');">
+                                <i class="fa fa-xmark"></i> 삭제하기
+                            </a>
+                        </div>
+                    </div>
+
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            사용자 계정
+                        </h5>
+                        <small>
+                            사주톡톡의 사용자 계정을 관리합니다.<br>
+                            사용자의 프로필 정보를 수정할 수 있습니다.
+                        </small>
+                    </div>
+
+                    <!-- profile -->
+                    <div class="my-4">
+                        <div class="row">
+
+                            <!-- left -->
+                            <div class="col-12 col-md-4 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>{{user.nickname}}</h6>
+                                        <small>{{user.id}}</small>
+                                    </div>
+
+                                    <!-- profile -->
+                                    <div class="my-4">
+                                        {% if user.bookmarks|length < 1 %}
+                                        <p class="small">
+                                            즐겨찾기한 상담가가 없습니다.
+                                        </p>
+                                        {% endif %}
+                                        {% for user in user.bookmarks %}
+                                        <div class="my-2 pb-3 row">
+                                            <div class="mb-1" style="display: flex;">
+                                                <div style="display: inline-block; text-align: left;" class="me-4">
+                                                    <div class="shadow" style="max-width: 340px; width: 40vw; max-height: 240px; height: 30vw; border-radius: 25px; background: url('{{user.photo}}') center/cover white;"></div>
+                                                </div>
+                                                <div style="display: inline-block;">
+            
+                                                    <!-- status -->
+                                                    {% if user.status == 'offline' %}
+                                                    <span class="badge bg-secondary p-1 px-2 mb-1">오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+                                                    {% elif user.status == 'online' %}
+                                                    <span class="badge bg-primary p-1 px-2 mb-1">상담가능 <i class="fa-solid fa-phone"></i></span>
+                                                    {% elif user.status == 'busy' %}
+                                                    <span class="badge bg-danger p-1 px-2 mb-1">상담중 <i class="fa-solid fa-phone"></i></span>
+                                                    {% else %}
+                                                    <span class="badge bg-secondary p-1 px-2 mb-1">숨김 <i class="fa-solid fa-eye-slash"></i></span>
+                                                    {% endif %}
+            
+                                                    <!-- info -->
+                                                    <h5>
+                                                        {{user.nickname}}
+                                                    </h5>
+                                                    <p class="small m-0 mb-2">
+                                                        {% if user.services|length == 1 and user.services.0 == '' %}
+                                                        <span class="badge bg-secondary" style="padding: 2px 6px 2px 6px; font-size: 12px;">서비스 없음</span>
+                                                        {% endif %}
+                                                        {% for service in user.services %}
+                                                        {% if service == 'saju' %}
+                                                        <span class="badge bg-success" style="padding: 2px 6px 2px 6px; font-size: 12px;">사주</span>
+                                                        {% elif service == 'taro' %}
+                                                        <span class="badge bg-primary" style="padding: 2px 6px 2px 6px; font-size: 12px;">타로</span>
+                                                        {% elif service == 'jum' %}
+                                                        <span class="badge bg-danger" style="padding: 2px 6px 2px 6px; font-size: 12px;">신점</span>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </p>
+                                                    <p class="small m-0 mb-2">
+                                                        {% if user.categories|length == 1 and user.categories.0 == '' %}
+                                                        <span class="badge bg-secondary p-1 px-2 mb-1">상담 없음</span>
+                                                        {% endif %}
+                                                        {% if 'tel' in user.categories %}
+                                                        <span class="badge bg-success p-1 px-2 mb-1">전화 상담</span>
+                                                        {% endif %}
+                                                        {% if 'chat' in user.categories %}
+                                                        <span class="badge bg-primary p-1 px-2 mb-1">채팅 상담</span>
+                                                        {% endif %}
+                                                        {% if 'meet' in user.categories %}
+                                                        <span class="badge bg-danger p-1 px-2 mb-1">대면 상담</span>
+                                                        {% endif %}
+                                                        {% if 'cafe' in user.categories %}
+                                                        <span class="badge bg-warning p-1 px-2 mb-1">카페 상담</span>
+                                                        {% endif %}
+                                                    </p>
+                                                    <small>
+                                                        {{user.introduce}}<br>
+                                                    </small>
+            
+                                                    <!-- button -->
+                                                    <div class="mt-4">
+                                                        <a href="/supervisor_user?id={{user.id}}" class="btn btn-primary me-2">
+                                                            <i class="fa fa-user"></i> 프로필
+                                                        </a>
+                                                        <a href="/chat?opponent={{user.id}}" class="btn btn-primary me-2">
+                                                            <i class="fa fa-comment"></i> 대화하기
+                                                        </a>
+                                                    </div>
+            
+                                                </div>
+                                            </div>
+                                            <p class="small mt-1">
+                                                <span class="me-2">
+                                                    <i class="fa-solid fa-message text-info"></i> <b>후기</b>({{user.reviews_count}})
+                                                </span>
+                                                <span class="me-2">
+                                                    <i class="fa-solid fa-star text-info"></i> <b>{{user.review_avg}}</b>({{user.reviews_count}})
+                                                </span>
+                                                <span class="me-2">
+                                                    <i class="fa-solid fa-heart text-info"></i> <b>{{user.likes}}</b>
+                                                </span>
+                                            </p>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+
+                                    <!-- buttons -->
+                                    <div class="my-4 pt-4">
+                                        <a href="/chat?opponent={{user.id}}" class="btn btn-primary me-2">
+                                            <i class="fa fa-comment"></i> 대화하기
+                                        </a>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+
+                                        <!-- title -->
+                                        <div class="mt-2">
+                                            <h6>
+                                                리뷰
+                                            </h6>
+                                            <small>
+                                                사용자가 작성한 리뷰를 확인합니다.
+                                            </small>
+                                        </div>
+
+                                        <!-- reviews -->
+                                        <div class="my-4" id="infiniteBox">
+                                            {% if reviews|length < 1 %}
+                                            <p class="small">
+                                                아직 리뷰가 없습니다.
+                                            </p>
+                                            {% else %}
+                                            {% for review in reviews %}
+                                            <div class="py-3">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <div style="display: inline-block; text-align: left;">
+                                                        <div>
+                                                            {% if review.star == 1 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 2 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 3 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 4 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 5 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                            </span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <p class="text-dark">
+                                                            {{review.content}}
+                                                        </p>
+                                                    </div>
+                                                    <div style="display: inline-block; text-align: right;">
+                                                        <a class="small text-danger" href="javascript: deleteTableData('REVIEW', '{{review.id}}');">
+                                                            <i class="fa fa-xmark"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- right -->
+                            <div class="col-12 col-md-8 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>프로필 업데이트 콘솔</h6>
+                                        <small>
+                                            사용자의 프로필 정보를 수정합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- photo -->
+                                    <div class="mb-4">
+                                        <i class="fa fa-user"></i> 아이디 및 비밀번호<br>
+                                        <small>
+                                            EMAIL(ID): {{user.id}}<br>
+                                        </small>
+                                        <a href="javascript: new bootstrap.Modal(accountPassword).show();">
+                                            <small>
+                                                Password: 수정하기
+                                            </small>
+                                            <i class='fa fa-pen'></i><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- niname -->
+                                    <div class="mb-4">
+                                        <h6>닉네임</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountNickname).show();">
+                                            <small>{{user.nickname}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- tel -->
+                                    <div class="mb-4">
+                                        <h6>연락처</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountTel).show();">
+                                            <small>{{user.tel}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- address -->
+                                    <div class="mb-4">
+                                        <h6>주소</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountAddress).show();">
+                                            <small>{{user.address}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                        <small>
+                                            사용자가 상품을 구매하거나, 이벤트 상품을 받을 주소입니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- point -->
+                                    <div class="mb-4">
+                                        <h6>보유 포인트</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountPoint).show();">
+                                            <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> <small>{{user.point}}P</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                        <small>
+                                            이벤트 또는 포인트 구매를 통해 획득한 포인트입니다.<br>
+                                            수정 시 주의해수세요.
+                                        </small>
+                                    </div>
+
+                                    <!-- status: online, busy, offlinen , hidden -->
+                                    <div class="mb-4">
+                                        <h6>상태</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountStatus).show();">
+                                            {% if user.status == 'active' %}
+                                            <span class="badge bg-primary p-1 px-2 mb-1">활성</span>
+                                            {% elif user.status == 'deleted' %}
+                                            <span class="badge bg-danger p-1 px-2 mb-1">삭제됨</span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- qnas -->
+                    <div class="my-4">
+                        <div class="rounded border p-3 shadow">
+                            <div class="my-4">
+                                <div class="mt-2 mb-5">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                <h6>
+                                                    1:1 문의
+                                                </h6>
+                                                <small>
+                                                    사용자가 작성한 1:1 문의를 확인합니다.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <div style="width: 60px;">
+                                                <a class="small" href="javascript: window.open('/profile_user_qnas?id={{user.id}}')">
+                                                    < 더보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="my-4">
+
+                                    {% if qnas|length < 1 %}
+                                    <p class="small">
+                                        문의 내역이 없습니다.
+                                    </p>
+                                    {% else %}
+                                    {% for qna in qnas %}
+                                    <div class="col-md-12 py-3">
+                                        <a href="#" class="text-dark">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <p class="text-dark m-0">
+                                                        {% if qna.comment|length < 1 %}
+                                                        [답변 대기중] 
+                                                        {% else %}
+                                                        [답변완료] 
+                                                        {% endif %}
+                                                        {{qna.title}}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <div>
+                                                        <a class="text-danger small" href="javascript: deleteTableData('POST', '{{qna.id}}');">
+                                                            <i class="fa fa-xmark"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <small class="text-secondary">
+                                                {{qna.author.nickname}} | {{qna.dt}}
+                                            </small>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- purchase logs -->
+                    <div class="my-4">
+                        <div class="rounded border p-3 shadow">
+                            <div class="my-4">
+                                <div class="mt-2 mb-5">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                <h6>
+                                                    포인트 내역
+                                                </h6>
+                                                <small>
+                                                    사용자의 포인트 내역을 확인합니다.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <div style="width: 60px;">
+                                                <a class="small" href="javascript: window.open('/user_purchases?id={{user.id}}')">
+                                                    < 더보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="my-4">
+                                    {% if purchases|length < 1 %}
+                                    <p class="small">
+                                        포인트 내역이 없습니다.
+                                    </p>
+                                    {% else %}
+                                    {% for purchase in purchases %}
+                                    <div class="col-12 mb-3">
+                                        <div class="border rounded shadow p-3">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <p class="m-0 small">
+                                                        {{purchase.dt}} 
+                                                            {% if purchase.pgcode == 'adjust' %}
+                                                            (사주톡톡)
+                                                            {% elif purchase.pgcode == 'point' %}
+                                                            ({{user.nickname}})
+                                                            {% else %}
+                                                            (페이레터)
+                                                            {% endif %}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small text-secondary" href="javascript: window.open('/purchase_detail?id={{purchase.id}}', 'purchase', 'width=800, height=600, left=100, top=100, scrollbars=yes, resizable=yes');">
+                                                        < 상세보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <span class="h6">
+                                                <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 20px; height: 20px;"> {{purchase.price}}P
+                                            </span>
+                                            <p class="m-0 small">
+                                                {{purchase.log}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- accountPassword -->
+        <div class="modal fade" id="accountPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">비밀번호 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>새 비밀번호</label> <small id="passwordConfirmText"></small>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="form-group">
+                            <label>새 비밀번호 확인</label> <small id="passwordCheckConfirmText"></small>
+                            <input type="password" class="form-control" id="passwordCheck">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setPassword();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountNickname -->
+        <div class="modal fade" id="accountNickname" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">닉네임 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>닉네임</label> <small id="nicknameConfirmText"></small>
+                            <input type="text" class="form-control" id="nickname" value="{{user.nickname}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setNickname();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountTel -->
+        <div class="modal fade" id="accountTel" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">연락처 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>연락처</label> <small id="telConfirmText"></small>
+                            <input type="text" class="form-control" id="tel" value="{{user.tel}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setTel();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountAddress -->
+        <div class="modal fade" id="accountAddress" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">주소 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>주소</label> <small id="addressConfirmText"></small>
+                            <input type="text" class="form-control" id="address" value="{{user.address}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setAddress();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountPoint -->
+        <div class="modal fade" id="accountPoint" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">정산 포인트 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>포인트</label>
+                            <input type="number" class="form-control" id="point" value="{{user.point}}">
+                            <small>
+                                정산 및 상담료 지급을 위한 포인트입니다.<br>
+                                수정 시 주의해주세요.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setPoint();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var modifingTable = '';
+            var modifingField = '';
+
+            // elements
+            const nicknameInput = document.getElementById('nickname');
+            const telInput = document.getElementById('tel');
+            const emailInput = document.getElementById('email');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            // 수정 완료
+            updateComplete = () => {
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">계정 수정 완료</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용자 계정 수정이 완료되었습니다.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `success`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+
+
+            // 비밀번호 변경
+            document.getElementById('password').addEventListener('input', () => {
+                var password = document.getElementById('password').value;
+                if (passwordRegex.test(password)) {
+                    document.getElementById('passwordConfirmText').innerHTML = '사용 가능한 비밀번호입니다.';
+                    document.getElementById('passwordConfirmText').style.color = '#198754';
+                } else {
+                    document.getElementById('passwordConfirmText').innerHTML = '비밀번호는 영문, 숫자를 포함한 8~16자여야 합니다.';
+                    document.getElementById('passwordConfirmText').style.color = '#dc3545';
+                }
+            });
+
+            document.getElementById('passwordCheck').addEventListener('input', () => {
+                var password = document.getElementById('password').value;
+                var passwordConfirm = document.getElementById('passwordCheck').value;
+                if (password == passwordConfirm) {
+                    document.getElementById('passwordCheckConfirmText').innerHTML = '비밀번호가 일치합니다.';
+                    document.getElementById('passwordCheckConfirmText').style.color = '#198754';
+                } else {
+                    document.getElementById('passwordCheckConfirmText').innerHTML = '비밀번호가 일치하지 않습니다.';
+                    document.getElementById('passwordCheckConfirmText').style.color = '#dc3545';
+                }
+            });
+
+            setPassword = async () => {
+                var password = document.getElementById('password').value;
+                var passwordCheck = document.getElementById('passwordCheck').value;
+
+                if (password != passwordCheck) {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">비밀번호 변경</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    비밀번호가 일치하지 않습니다.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `error`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``,
+                    });
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('password', password);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+
+                    updateComplete();
+                });
+            }
+
+            // 닉네임 수정
+            var nicknameOk = false;
+            document.getElementById('nickname').addEventListener('input', async () => {
+                var nicknameInput = document.getElementById('nickname');
+                if (nicknameInput.value.length > 0 && nicknameInput.value.length <= 20) {
+                    var formData = new FormData();
+                    formData.append('nickname', nicknameInput.value);
+                    await fetch('/api/check_nickname', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    }).then(async (response) => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        var success = data['success'];
+
+                        if (success == 'y') {
+                            document.getElementById('nicknameConfirmText').innerHTML = '사용 가능한 닉네임입니다.';
+                            document.getElementById('nicknameConfirmText').style.color = '#198754';
+                            nicknameOk = true;
+                        } else {
+                            document.getElementById('nicknameConfirmText').innerHTML = '이미 사용 중인 닉네임입니다.';
+                            document.getElementById('nicknameConfirmText').style.color = '#dc3545';
+                            nicknameOk = false;
+                        }
+                    });
+                } else {
+                    document.getElementById('nicknameConfirmText').innerHTML = '닉네임은 1~20글자여야 합니다.';
+                    document.getElementById('nicknameConfirmText').style.color = '#dc3545';
+                    nicknameOk = false;
+                }
+            });
+
+            setNickname = async () => {
+                if (nicknameOk) {
+                    var nickname = document.getElementById('nickname').value;
+
+                    var formData = new FormData();
+                    formData.append('id', '{{user.id}}');
+                    formData.append('nickname', nickname);
+                    await fetch('/api/rewrite_account', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var success = data['success'];
+                        console.log(success);
+                        if (success == 'y') {
+                            updateComplete();
+                        }
+                    });
+                }
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">닉네임 변경</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용 가능한 닉네임을 입력해주세요.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `error`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                });
+            }
+
+                        // 연락처 수정
+            var telOk = false;
+            document.getElementById('tel').addEventListener('input', async () => {
+                var telInput = document.getElementById('tel');
+                if (telInput.value.length == 11 || telInput.value.length == 10) {
+                    var formData = new FormData();
+                    formData.append('tel', telInput.value);
+                    await fetch('/api/check_tel', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    }).then(async (response) => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        var success = data['success'];
+
+                        if (success == 'y') {
+                            document.getElementById('telConfirmText').innerHTML = '사용 가능한 연락처입니다.';
+                            document.getElementById('telConfirmText').style.color = '#198754';
+                            telOk = true;
+                        } else {
+                            document.getElementById('telConfirmText').innerHTML = '이미 사용 중인 연락처입니다.';
+                            document.getElementById('telConfirmText').style.color = '#dc3545';
+                            telOk = false;
+                        }
+                    });
+                } else {
+                    document.getElementById('telConfirmText').innerHTML = '연락처는 10~11글자여야 합니다.';
+                    document.getElementById('telConfirmText').style.color = '#dc3545';
+                    telOk = false;
+                }
+            });
+
+            setTel = async () => {
+                if (telOk) {
+                    var tel = document.getElementById('tel').value;
+
+                    var formData = new FormData();
+                    formData.append('id', '{{user.id}}');
+                    formData.append('tel', tel);
+                    await fetch('/api/rewrite_account', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var success = data['success'];
+                        console.log(success);
+                        if (success == 'y') {
+                            updateComplete();
+                        }
+                    });
+                }
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">연락처 변경</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용 가능한 연락처를 입력해주세요.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `error`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                });
+            }
+
+            // 주소 수정
+            setAddress = async () => {
+                var address = document.getElementById('address').value;
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('address', address);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 포인트 수정
+            setPoint = async () => {
+                var point = document.getElementById('point').value;
+
+                var formData = new FormData();
+                formData.append('id', '{{user.id}}');
+                formData.append('point', point);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 삭제
+            hideCounselor = () => {
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">계정 숨기기</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용자 계정을 삭제하시겠습니까?<br>
+                                <small class="text-danger">
+                                    삭제: 사용자 계정이 로그인이 불가능해지지만, 데이터는 보존됩니다.<br>
+                                </small>
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `숨기기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        var formData = new FormData();
+                        formData.append('id', '{{user.id}}');
+                        formData.append('status', 'deleted');
+                        fetch('/api/rewrite_account', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            var success = data['success'];
+                            if (success == 'y') {
+                                updateComplete();
+                            }
+                        });
+                    }
+                });
+            }
+
+
+
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% if account.account_type == 'counselor' %}
+            {% include "_sajutoktok/parts/header_counselor.html" %}
+            {% else %}
+            {% include "_sajutoktok/parts/header_user.html" %}
+            {% endif %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        < 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            상담사 프로필
+                        </h5>
+                        <small>
+                            사주 상담사의 프로필 확인합니다.
+                        </small>
+                    </div>
+
+                    <!-- profile -->
+                    <div class="my-4">
+                        <div class="row">
+
+                            <!-- left -->
+                            <div class="col-12 col-md-4 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <div style="display: inline-block; text-align: left;">
+                                                <div>
+                                                    <h6>{{counselor.nickname}}</h6>
+                                                    <small>{{counselor.introduce}}</small>
+                                                </div>
+                                            </div>
+                                            <div style="display: inline-block; text-align: right;">
+                                                <a class="text-danger" href="javascript: addBookmark();">
+                                                    {% if counselor.id in account.bookmark_ids %}
+                                                    <i class="fa-xl fa-solid fa-heart"></i> {{counselor.likes}}
+                                                    {% else %}
+                                                    <i class="fa-xl fa-regular fa-heart"></i> {{counselor.likes}}
+                                                    {% endif %}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- profile -->
+                                    <div class="my-4">
+                                        <p class="small m-0 mb-2">
+                                            {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                                            <span class="badge bg-secondary p-1 px-2" style="font-size: 12px;">없음</span>
+                                            {% endif %}
+                                            {% for service in counselor.services %}
+                                            {% if service == 'saju' %}
+                                            <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/saju.png" class="w-60" style="display: inline;">
+                                            </div>
+                                            {% elif service == 'taro' %}
+                                            <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/taro.png" class="w-60" style="display: inline;">
+                                            </div>
+                                            {% elif service == 'jum' %}
+                                            <div class="shadow-sm border text-center p-1 py-2 mt-2" style="width: 50px; border-radius: 10px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/jum.png" class="w-60" style="display: inline;">
+                                            </div>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                        <p class="small m-0 mb-2">
+                                            {% if counselor.categories|length == 1 and counselor.categories.0 == '' %}
+                                            <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/icon/empty.png" class="w-60" style="display: inline;">
+                                            </div>
+                                            {% endif %}
+                                            {% if 'tel' in counselor.categories %}
+                                            <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/video-call.png" class="w-30" style="display: inline;">
+                                                <span style="font-size: 12px;">
+                                                    전화 상담
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if 'chat' in counselor.categories %}
+                                            <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/message_bubbles.png" class="w-30" style="display: inline;">
+                                                <span style="font-size: 12px;">
+                                                    채팅 상담
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if 'meet' in counselor.categories %}
+                                            <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/conversation.png" class="w-30" style="display: inline;">
+                                                <span style="font-size: 12px;">
+                                                    대면 상담
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                            {% if 'cafe' in counselor.categories %}
+                                            <div class="shadow-sm btn btn-light border p-1 py-2 mt-1" style="width: 85px; display: inline-block;">
+                                                <img src="/static/_sajutoktok/img/content/coffee.png" class="w-30" style="display: inline;">
+                                                <span style="font-size: 12px;">
+                                                    카페 상담
+                                                </span>
+                                            </div>
+                                            {% endif %}
+                                        </p>
+                                        <div class="shadow w-100 d-block d-md-none" style="max-height: 300px; height: 40vw; border-radius: 25px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                        <div class="shadow w-100 d-none d-md-block" style="max-height: 200px; height: 14vw; border-radius: 20px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                    </div>
+
+                                    <!-- buttons -->
+                                    <div class="my-4 pt-4">
+                                        <a href="/chat?opponent={{counselor.id}}" class="btn btn-primary me-2">
+                                            <i class="fa fa-comment"></i> 대화하기
+                                        </a>
+                                    </div>
+
+                                    <!-- review and stars -->
+                                    <p class="small mt-1">
+                                        <span class="me-2">
+                                            <i class="fa-solid fa-message text-info"></i> <b>후기</b>({{counselor.reviews_count}})
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-star text-info"></i> <b>{{counselor.review_avg}}</b>({{counselor.reviews_count}})
+                                        </span>
+                                    </p>
+
+                                    <div class="row mb-3">
+                                        <div class="col-6 text-center border-end">
+                                            <p class="small m-0">
+                                                후기
+                                            </p>
+                                            <h2>
+                                                {{reviews|length}} 건
+                                            </h2>
+                                        </div>
+                                        <div class="col-6 text-center">
+                                            <p class="small m-0">
+                                                평점
+                                            </p>
+                                            <h2>
+                                                {{review_avg}} 점
+                                            </h2>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <!-- right -->
+                            <div class="col-12 col-md-8 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>상담사 리뷰</h6>
+                                        <small>
+                                            사주 상담사의 리뷰를 확인하고 작성할 수 있습니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+
+                                        <!-- title -->
+                                        <div class="mt-2 mb-2">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <h6>
+                                                        리뷰
+                                                    </h6>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small" href="/counselor_reviews?id={{counselor.id}}">
+                                                        < 더보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="rounded p-2 m-0 mb-4 bg-light">
+                                            <b>
+                                                <img src="/static/_sajutoktok/img/icon/megaphone_only.png" style="width: 24px; height: 24px;"> 리뷰 작성
+                                            </b>
+                                            <p class="m-0 p-1" style="font-size: 12px;">
+                                                상담사에 대한 리뷰는 상담 후에만 작성할 수 있습니다.<br>
+                                                리뷰는 상담사의 평가와 상담을 받을 다른 분들에게 도움이 됩니다.
+                                            </p>
+                                        </div>
+
+                                        <div class="row px-3 mb-4">
+                                            <div class="d-none d-lg-block col-3"></div>
+                                            <a class="btn btn-outline-secondary mt-4 col-12 col-lg-6" href="/counselor_qna_write?id={{counselor.id}}">
+                                                <b class="text-dark">리뷰 작성하기</b> <span class="text-info">></span>
+                                            </a>
+                                        </div>
+    
+                                        <!-- reviews -->
+                                        <div class="my-4">
+                                            {% if reviews|length < 1 %}
+                                            <p class="small">
+                                                아직 리뷰가 없습니다.
+                                            </p>
+                                            {% else %}
+                                            {% for review in reviews %}
+                                            <div class="py-3">
+                                                <div>
+                                                    {% if review.star == 1 %}
+                                                    <b>{{review.user.nickname}}</b> 
+                                                    <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </span>
+                                                    {% elif review.star == 2 %}
+                                                    <b>{{review.user.nickname}}</b> 
+                                                    <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </span>
+                                                    {% elif review.star == 3 %}
+                                                    <b>{{review.user.nickname}}</b> 
+                                                    <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </span>
+                                                    {% elif review.star == 4 %}
+                                                    <b>{{review.user.nickname}}</b> 
+                                                    <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star"></i>
+                                                    </span>
+                                                    {% elif review.star == 5 %}
+                                                    <b>{{review.user.nickname}}</b> 
+                                                    <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                        <i class="fa fa-star text-warning"></i>
+                                                    </span>
+                                                    {% endif %}
+                                                </div>
+                                                <p class="text-dark">
+                                                    {{review.content}}
+                                                </p>
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+    
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- qnas -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+
+                                <!-- title -->
+                                <div class="my-4">
+
+                                    <div class="mt-2 mb-5">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <div style="display: inline-block; text-align: left;">
+                                                <div>
+                                                    <h6>
+                                                        1:1 문의
+                                                    </h6>
+                                                    <p class="small m-0">
+                                                        문의하신 내용에 대해 상담사가 확인 후 답변드립니다.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div style="display: inline-block; text-align: right;">
+                                                <div style="width: 60px;">
+                                                    <a class="small" href="/counselor_qnas?id={{counselor.id}}">
+                                                        < 더보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-4">
+                                        <div class="rounded p-2 m-0 bg-light">
+                                            <b>
+                                                <img src="/static/_sajutoktok/img/icon/megaphone_only.png" style="width: 24px; height: 24px;"> 1:1 문의
+                                            </b>
+                                            <p class="m-0 p-1" style="font-size: 12px;">
+                                                상담문의는 상담가능 시간, 상담 내용에 대한 간단한 문의만 가능합니다.<br>
+                                                문의 시 전화번호, 이메일 등 개인정보는 기재하지 않도록 주의해주세요.
+                                            </p>
+                                        </div>
+
+                                        {% if account.account_type == 'user' or account.account_type == 'supervisor' %}
+                                        <div class="row px-3 mb-4">
+                                            <div class="d-none d-lg-block col-3"></div>
+                                            <a class="btn btn-outline-secondary mt-4 col-12 col-lg-6" href="/counselor_qna_write?id={{counselor.id}}">
+                                                <b class="text-dark">문의 작성하기</b> <span class="text-info">></span>
+                                            </a>
+                                        </div>
+                                        {% endif %}
+
+                                        {% if qnas|length < 1 %}
+                                        <p class="small">
+                                            문의 내역이 없습니다.
+                                        </p>
+                                        {% endif %}
+                                        {% for qna in qnas %}
+                                        <div class="col-md-12 py-3">
+                                            <a href="/counselor_qna?id={{coungselor.id}}&qna_id={{qna.id}}" class="text-dark">
+                                                <p class="m-0 text-dark">
+                                                    {% if qna.comment|length < 1 %}
+                                                    [답변 대기중] 
+                                                    {% else %}
+                                                    [답변완료] 
+                                                    {% endif %}
+                                                    {{qna.title}}
+                                                </p>
+                                                <small class="text-secondary">
+                                                    {{qna.author.nickname}} | {{qna.dt}}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- blogs -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+                                <div class="my-4">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                            <div style="display: inline-block; text-align: left;">
+                                                <div>
+                                                    <h6>
+                                                        블로그
+                                                    </h6>
+                                                    <small>
+                                                        사주 상담가의 블로그를 확인합니다.
+                                                    </small>
+                                                </div>
+                                            </div>
+                                            <div style="display: inline-block; text-align: right;">
+                                                <div>
+                                                    <a class="small" href="/counselor_blogs?id={{counselor.id}}">
+                                                        < 더보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- blogs -->
+                                    <div class="my-4">
+                                        {% if blogs|length < 1 %}
+                                        <p class="small">
+                                            게시글이 없습니다.
+                                        </p>
+                                        {% else %}
+                                        {% for blog in blogs %}
+                                        <div class="col-md-12 py-3">
+                                            <a href="/counselor_blog?id={{counselor.id}}&blog_id={{blog.id}}"" class="text-dark">
+                                                <p class="m-0 text-dark">
+                                                    {{blog.title}}
+                                                </p>
+                                                <small class="text-secondary">
+                                                    {{blog.author.nickname}} | {{blog.dt}}
+                                                </small>
+                                            </a>
+                                        </div>
+                                        {% endfor %}
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTON -->
+        <div id="reviewButton" style="position: fixed; z-index: 999; left: 10px; bottom: 80px; display: none;">
+            <a class="btn btn-primary p-1 px-2 small" href="javascript: requestReview();">
+                <img src="/static/_sajutoktok/img/icon/review_only.png" style="width: 22px; display: inline;">
+                리뷰 작성
+            </a>
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- review -->
+        <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">리뷰 작성</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <h6>
+                            상담 내용
+                        </h6>
+                        <p id="purchaseDt" class="small m-0"></p>
+                        <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                            <div style="display: inline-block; text-align: left;">
+                                <div>
+                                    <p id="itemName" class="text-dark m-0"></p>
+                                </div>
+                            </div>
+                            <div style="display: inline-block; text-align: right;">
+                                <div>
+                                    <p id="itemPrice" class="small text-secondary" style="display: inline;"></p>
+                                    <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 18px; height: 18px; display: inline;">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="small text-secondary" id="itemDetail"></p>
+                        <div class="form-group">
+                            <label>리뷰 작성</label>
+                            <textarea class="form-control" rows="5" id="reviewContent" placeholder="리뷰를 내용을 작성해주세요.(예: 제 마음을 너무 잘 풀어주시는 사주가님 정말 최고에요!)"></textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setReview();">리뷰 작성</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            var purchaseId = '';
+
+            // elements
+            const reviewButton = document.getElementById('reviewButton');
+            const purchaseDt = document.getElementById('purchaseDt');
+            const itemName = document.getElementById('itemName');
+            const itemPrice = document.getElementById('itemPrice');
+            const reviewContentInput = document.getElementById('reviewContent');
+            const itemDetail = document.getElementById('itemDetail');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                requestReview();
+            }
+
+            addBookmark = async () => {
+                var formDatas = new FormData();
+                formDatas.append('counselor_id', '{{counselor.id}}');
+                await fetch('/api/toggle_bookmark', {
+                    method: 'POST',
+                    body: formDatas,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(() => {
+                    location.reload();
+                });
+            }
+
+            deletePost = async (id) => {
+                await deleteData({
+                    model: 'POST',
+                    id: id
+                });
+                window.location.reload();
+            }
+
+            requestReview = async () => {
+                await getData({
+                    model: 'PURCHASE',
+                    id: '',
+                    field: 'status',
+                    value: 'completed'
+                }).then(async (data) => {
+                    var dbDataP = JSON.parse(data.db);
+                    if (dbDataP.length > 0) {
+                        var pkP = dbDataP[0].pk;
+                        var fieldsP = dbDataP[0].fields;
+
+                        await getData({
+                            model: 'ITEM',
+                            id: fieldsP['item_id']
+                        }).then(async (data) => {
+                            var dbDataI = JSON.parse(data.db);
+                            var pkI = dbDataI[0].pk;
+                            var fieldsI = dbDataI[0].fields;
+
+                            purchaseId = pkP;
+                            purchaseDt.innerHTML = fieldsP['dt'];
+                            itemName.innerHTML = fieldsI['name'];
+                            itemPrice.innerHTML = fieldsI['final_price'].toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                            itemDetail.innerHTML = fieldsI['description'];
+
+                            reviewButton.style.display = 'block';
+                            await Swal.fire({
+                                html: `
+                                <div>
+                                    <div class="text-center py-4">
+                                        <h1 class="text-dark">리뷰 작성</h1>
+                                    </div>
+                                    <diV class="text-start">
+                                        <p class="text-secondary">
+                                            상담 결과에 만족하시나요?<br>
+                                            지금 바로 서비스 리뷰를 남겨주세요!
+                                        </p>
+                                    </div>
+                                </div>`,
+                                icon: `info`,
+                                showConfirmButton: true,
+                                confirmButtonText: `리뷰 남기기`,
+                                showCancelButton: true,
+                                cancelButtonText: `나중에`
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    new bootstrap.Modal(document.getElementById('reviewModal')).show();
+                                }
+                            });
+                        });
+                    } else {
+                        return
+                    }
+                });
+            }
+
+            setReview = async () => {
+                var content = reviewContentInput.value;
+
+                if (content.length < 1) {
+                    return
+                }
+
+                await getData({
+                    model: 'PURCHASE',
+                    id: purchaseId
+                }).then(async (data) => {
+                    var dbData = JSON.parse(data.db);
+                    var pk = dbData[0].pk;
+                    var fields = dbData[0].fields;
+
+                    await setData({
+                        model: 'PURCHASE',
+                        id: pk,
+                        field_value: JSON.stringify({
+                            item_id: fields['item_id'],
+                            user_id: fields['user_id'],
+                            price: fields['price'],
+                            purchase_type: fields['purchase_type'],
+                            dt: fields['dt'],
+                            payment_method: fields['payment_method'],
+                            payment_code: fields['payment_code'],
+                            status: 'reviewed',
+                            log: fields['log']
+                        })
+                    });
+
+                    await setData({
+                        model: 'REVIEW',
+                        id: '',
+                        field_value: JSON.stringify({
+                            user_id: '{{account.id}}',
+                            counselor_id: '{{counselor.id}}',
+                            content: content,
+                        })
+                    }).then(async () => {
+                        await Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">리뷰 작성</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        리뷰가 성공적으로 작성되었습니다.<br>
+                                        감사합니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then((result) => {
+                            window.location.reload();
+                        });
+                    });
+                })
+            }
+
+            deleteReview = async (id) => {
+                await Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">리뷰 삭제</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                리뷰를 삭제하시겠습니까?<br>
+                                리뷰를 삭제하면 해당 상담 건의 리뷰를 다시 작성할 수 없습니다.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `삭제하기`,
+                    confirmButtonColor: `#dc3545`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await deleteData({
+                            model: 'REVIEW',
+                            id: id
+                        });
+                        await Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">리뷰 삭제</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        리뷰가 성공적으로 삭제되었습니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then((result) => {
+                            window.location.reload();
+                        });
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>

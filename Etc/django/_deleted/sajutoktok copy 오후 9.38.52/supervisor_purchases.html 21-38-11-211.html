@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header_supervisor.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.location.href='/supervisor';">
+                        <i class="fa fa-chevron-left"></i> 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            결제 및 사용 내역들
+                        </h5>
+                        <small>
+                            사주톡톡의 결제 및 포인트 사용 내역을 확인하고 관리합니다.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        {% if purchases|length < 1 %}
+                        <p class="small">
+                            포인트 내역이 없습니다.
+                        </p>
+                        {% else %}
+                        {% for purchase in purchases %}
+                        <div class="col-12 mb-3">
+                            <div class="border rounded shadow p-3">
+                                <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                    <div style="display: inline-block; text-align: left;">
+                                        <p class="m-0 small">
+                                            {{purchase.dt}} 
+                                                {% if purchase.pgcode == 'adjust' %}
+                                                (사주톡톡)
+                                                {% elif purchase.pgcode == 'point' %}
+                                                ({{user.nickname}})
+                                                {% else %}
+                                                (페이레터)
+                                                {% endif %}
+                                        </p>
+                                    </div>
+                                    <div style="display: inline-block; text-align: right;">
+                                        <a class="small text-secondary" href="javascript: window.open('/purchase_detail?id={{purchase.id}}', 'purchase', 'width=800, height=600, left=100, top=100, scrollbars=yes, resizable=yes');">
+                                            < 상세보기
+                                        </a>
+                                    </div>
+                                </div>
+                                <span class="h6">
+                                    <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 20px; height: 20px;"> {{purchase.price}}P
+                                </span>
+                                <p class="m-0 small">
+                                    {{purchase.user.nickname}}({{purchase.user.id}}): {{purchase.log}}
+                                </p>
+                            </div>
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- MEDIA -->
+        <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">미디어 업로드</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <!-- media select -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label>미디어 타입</label>
+                                    <select class="form-control form-select" id="mediaType">
+                                        <option value="single_image" selected>단일 이미지</option>
+                                        <option value="text">이미지 없음</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- multiful image upload -->
+                            <div class="row" id="multifulImage" style="display: none;">
+                                <div class="form-group">
+                                    <div class="owl-carousel owl-theme testmonial-style02" style="height: 52vw; max-height: 400px;">
+
+                                        <!-- 이미지 0 -->
+                                        <div class="item preview0">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="javascript: deleteImage(0);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 1 -->
+                                        <div class="item preview1">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="javascript: deleteImage(0);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 2 -->
+                                        <div class="item preview2">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(2);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 3 -->
+                                        <div class="item preview3">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(3);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- 이미지 4 -->
+                                        <div class="item preview4">
+                                            <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                                <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;">
+                                                    <a class="text-danger" href="deleteImage(4);">
+                                                        <i class="fa fa-lg fa-xmark"></i>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <label>이미지(최대 5개 등록 가능)</label><br>
+                                    <small>이미지 선택형 또는 캐로셀</small>
+                                </div>
+                            </div>
+
+                            <!-- single image upload -->
+                            <div class="row" id="singleImage" style="display: block;">
+                                <div class="form-group">
+
+                                    <!-- 이미지 0 -->
+                                    <div class="preview5">
+                                        <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                            <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <label>이미지</label><br>
+                                    <small>단일 이미지의 경우 가로 크기가 최대로 설정됩니다.</small>
+                                </div>
+                            </div>
+
+                            <!-- image upload -->
+                            <div class="row" id="imageUpload" style="display: block;">
+                                <div class="form-group">
+                                    <input id="images" type="file" class="form-control" style="height: 35px;" accept="image/png, image/jpeg, image/gif" multiple>
+                                </div>
+                            </div>
+
+                            <!-- embed -->
+                            <div class="row" id="embedCode" style="display: none;">
+                                <div class="form-group">
+                                    <label>유튜브 링크</label>
+                                    <input class="form-control" id="embed"></input>
+                                    <small>
+                                        유튜브 링크 하단의 공유하기 > 동영상 퍼가기 내 "https://www.youtube.com/embed/..." 형태의 URL 주소를 입력해주세요.<br>
+                                        https://www.youtube.com/embed/aaaaaaaaa?si=bbbbbbbbbb 와 같은 형태입니다.
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setMedia();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- item info -->
+        <div class="modal fade" id="modifyItemModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상품 정보 수정</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>상품명</label>
+                            <input class="form-control" id="newName">
+                        </div>
+                        <div class="form-group">
+                            <label>상품 설명</label>
+                            <input class="form-control" id="newDescription">
+                        </div>
+                        <div class="form-group">
+                            <label>처음가격</label>
+                            <input class="form-control" id="newOriginPrice">
+                        </div>
+                        <div class="form-group">
+                            <label>최종가격</label>
+                            <input class="form-control" id="newFinalPrice">
+                            <small>
+                                처음가격과 최종 가격이 같으면, 할인표시를 하지 않습니다.
+                            </small>
+                        </div>
+                        <div class="form-group">
+                            <label>리워드</label>
+                            <input class="form-control" id="newReward">
+                            <small>
+                                상품 구매시 적립되는 포인트입니다.
+                            </small>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setItem();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <!-- media -->
+        <script>
+            const preview0Box = document.getElementById("preview0");
+            const preview1Box = document.getElementById("preview1");
+            const preview2Box = document.getElementById("preview2");
+            const preview3Box = document.getElementById("preview3");
+            const preview4Box = document.getElementById("preview4");
+            const preview5Box = document.getElementById("preview5");
+            const imagesInput = document.getElementById("images");
+            const photosInput = document.getElementById("photos");
+            const mediaTypeInput = document.getElementById('mediaType');
+            const multifulImageBox = document.getElementById('multifulImage');
+            const singleImageBox = document.getElementById('singleImage');
+            const imageUploadBox = document.getElementById('imageUpload');
+            const embedCodeBox = document.getElementById('embedCode');
+            const embedInput = document.getElementById('embed');
+            let uploadedFiles = [];
+
+            imagesInput.addEventListener('change', function () {
+                const filesArray = Array.from(imagesInput.files);
+                filesArray.sort((a, b) => a.name.localeCompare(b.name));
+                for (let i = 0; i < 5; i++) {
+                    if (filesArray[i] && checkImage(filesArray[i])) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                            document.querySelectorAll(`.preview5>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(filesArray[i]);
+                        uploadedFiles.push(filesArray[i]);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            });
+
+            function deleteImage(index) {
+                uploadedFiles.splice(index, 1);
+                for (let i = 0; i < 5; i++) {
+                    if (i < uploadedFiles.length) {
+                        const file = uploadedFiles[i];
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            }
+
+            mediaTypeInput.addEventListener('input', () => {
+                const mediaType = mediaTypeInput.value;
+                if (mediaType === 'single_image') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'block';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'text') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'none';
+                }
+            });
+        </script>
+        <script>
+            // variables
+            var modifingTable = '';
+            var modifingId = '';
+
+            // elements
+            const modifyItemModal = document.getElementById('modifyItemModal');
+            const newName = document.getElementById('newName');
+            const newDescription = document.getElementById('newDescription');
+            const newOriginPrice = document.getElementById('newOriginPrice');
+            const newFinalPrice = document.getElementById('newFinalPrice');
+            const newReward = document.getElementById('newReward');
+
+
+            // fumctions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                document.querySelectorAll('.price').forEach((element) => {
+                    element.innerHTML = element.innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+            }
+
+            initItems = async () => {
+                await deleteData({
+                    model: 'ITEM',
+                    id: '',
+                    field: 'item_type',
+                    value: 'point',
+                });
+
+                // 50,000 포인트
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: '50,000P 충전',
+                        item_type: 'point',
+                        provider_id: '{{account.id}}',
+                        photo: '/media/default.png',
+                        description: '사주톡톡에서 사용하는 포인트입니다.',
+                        origin_price: 50000,
+                        final_price: 45000,
+                        duration_seconds: 0
+                    })
+                });
+
+                // 30,000 포인트
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: '30,000P 충전',
+                        item_type: 'point',
+                        provider_id: '{{account.id}}',
+                        photo: '/media/default.png',
+                        description: '사주톡톡에서 사용하는 포인트입니다.',
+                        origin_price: 30000,
+                        final_price: 27000,
+                        duration_seconds: 0
+                    })
+                });
+
+                // 10,000 포인트
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: '10,000P 충전',
+                        item_type: 'point',
+                        provider_id: '{{account.id}}',
+                        photo: '/media/default.png',
+                        description: '사주톡톡에서 사용하는 포인트입니다.',
+                        origin_price: 10000,
+                        final_price: 9000,
+                        duration_seconds: 0
+                    })
+                });
+
+                // 5,000 포인트
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: '5,000P 충전',
+                        item_type: 'point',
+                        provider_id: '{{account.id}}',
+                        photo: '/media/default.png',
+                        description: '사주톡톡에서 사용하는 포인트입니다.',
+                        origin_price: 5000,
+                        final_price: 4500,
+                        duration_seconds: 0
+                    })
+                });
+
+                window.location.reload();
+            }
+
+            modifyItem = (id, name, description, origin_price, discount_price, final_price, reward) => {
+                modifingTable = 'ITEM';
+                modifingId = id;
+
+                newName.value = name;
+                newDescription.value = description;
+                newOriginPrice.value = origin_price;
+                newFinalPrice.value = final_price;
+                newReward.value = reward;
+
+                new bootstrap.Modal(modifyItemModal).show();
+            }
+
+            setItem = async () => {
+                var name = newName.value;
+                var description = newDescription.value;
+                var origin_price = newOriginPrice.value;
+                var final_price = newFinalPrice.value;
+                var reward = newReward.value;
+
+                await setData({
+                    model: 'ITEM',
+                    id: modifingId,
+                    field_value: JSON.stringify({
+                        name: name,
+                        description: description,
+                        origin_price: origin_price,
+                        final_price: final_price,
+                        reward: reward
+                    })
+                });
+                window.location.reload();
+            }
+
+            deleteItem = async (id) => {
+                await deleteData({
+                    model: 'ITEM',
+                    id: id,
+                });
+                window.location.reload();
+            }
+
+            modifyItemImage = (id) => {
+                modifingTable = 'ITEM';
+                modifingId = id;
+
+                new bootstrap.Modal(mediaModal).show();
+            }
+
+            setMedia = async () => {
+                var mediaType = mediaTypeInput.value;
+                filePaths = '';
+                if (mediaType == 'text') {
+                    filePaths = '';
+                } else {
+                    for (let file of uploadedFiles) {
+                        try {
+                            var filePathString = await uploadFile(file);
+                            filePaths += filePathString + ',';
+                        } catch (error) {
+                            console.error("File upload failed:", error);
+                        }
+                    }
+                    if (filePaths.length > 0) {
+                        filePaths = filePaths.slice(0, -1);
+                    }
+                }
+
+                console.log('{{notice.media.id}}');
+                // setData
+                await getData({
+                    model: 'ITEM',
+                    id: modifingId,
+                }).then(async (data) => {
+                    var dbData = JSON.parse(data.db);
+                    var pk = dbData[0].pk;
+                    var fields = dbData[0].fields;
+
+                    await setData({
+                        model: 'ITEM',
+                        id: pk,
+                        field_value: JSON.stringify({
+                            name: fields.name,
+                            description: fields.description,
+                            origin_price: fields.origin_price,
+                            final_price: fields.final_price,
+                            reward: fields.reward,
+                            photo: filePaths
+                        })
+                    }).then(() => window.location.reload());
+                });
+            }
+
+            addNewItem = async () => {
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: '새 상품',
+                        description: '새 상품입니다.',
+                        origin_price: 100,
+                        final_price: 100,
+                        reward: 100,
+                        provider_id: '{{account.id}}',
+                        item_type: 'point',
+                        photo: '/media/default.png'
+                    })
+                }).then(() => window.location.reload());
+            }
+
+        </script>
+
+    </body>
+
+</html>

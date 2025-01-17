@@ -1,0 +1,141 @@
+{% extends 'sajutoktok/_base.html' %}
+{% block content %}
+<div class="main-wrapper">
+
+  <!-- 헤더 -->
+  <!-- 로그인 페이지는 헤더 없음 -->
+
+  <section class="bg-light p-0 py-2" style="min-height: 100vh;">
+    <div class="container d-flex flex-column">
+      <div class="row align-items-center justify-content-center min-vh-100">
+        <div class="col-12 col-lg-8">
+
+          <!-- 뒤로가기 버튼 -->
+          <a class="small" href="javascript: window.history.back();">
+            <i class="fas fa-chevron-left"></i> 뒤로가기
+          </a>
+
+          <!-- 로고 -->
+          <div class="logo-index text-center">
+            <img src="/static/sajutoktok/img/logo.png" style="min-width: 200px; width: 15vw;" class="my-2" />
+            <h4 class="mt-2">사주톡톡</h4>
+          </div>
+
+          <!-- 로그인 폼 -->
+          <div class="container">
+            <div class="row" onkeyup="if(event.keyCode == 13) tryLogin();">
+              <div class="col-12">
+                <div class="form-group text-start">
+                  <label>이메일 또는 상담사 아이디</label>
+                  <input class="form-control" id="email" placeholder="이메일 또는 상담사 아이디를 입력해주세요.">
+                </div>
+              </div>
+              <div class="col-12">
+                <div class="form-group text-start">
+                  <label>비밀번호</label>
+                  <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요.">
+                </div>
+              </div>
+            </div>
+            <div class="row mt-2">
+              <div class="text-start text-small">
+                <a href="/forgot_cert_request" class="small"><u>비밀번호를 잊으셨나요?</u></a>
+              </div>
+              <div class="col-md-12">
+                <button onclick="tryLogin();" class="butn style-one fill mt-4 mb-0 bg-primary w-100">로그인</button>
+              </div>
+            </div>
+            <div class="row mt-4">
+              <div class="text-center py-1 col-12 col-xl-4">
+                <a href="#">
+                  <div class="rounded"
+                    style="width: 100%; height: 50px; background: url('/static/sajutoktok/img/content/apple.png') left/contain no-repeat #000000; cursor: pointer;">
+                    <h6 class="text-white" style="padding-top: 16px;">Sign in with Apple</h6>
+                  </div>
+                </a>
+              </div>
+              <div class="text-center py-1 col-12 col-xl-4">
+                <a href="#">
+                  <div class="rounded"
+                    style="width: 100%; height: 50px; background: url('/static/sajutoktok/img/content/naver.png') left/contain no-repeat #08c45c; cursor: pointer;">
+                    <h6 class="text-white" style="padding-top: 16px;">네이버 로그인</h6>
+                  </div>
+                </a>
+              </div>
+              <div class="text-center py-1 col-12 col-xl-4">
+                <a href="#">
+                  <div class="rounded"
+                    style="width: 100%; height: 50px; background: url('/static/sajutoktok/img/content/kakao.png') left/contain no-repeat #fde50e; cursor: pointer;">
+                    <h6 class="text-dark" style="padding-top: 16px;">카카오 로그인</h6>
+                  </div>
+                </a>
+              </div>
+            </div>
+            <div class="text-start small mt-4">
+              아직 회원이 아니신가요? <a href="/register_cert_request"><u>회원가입</u></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 네비게이션바 -->
+  <!-- 로그인 페이지는 네비게이션바 없음 -->
+
+  <script>
+    window.onload = () => {
+      console.log(`Window loaded at ${getNowDt()}`);
+    }
+
+    // 로그인 시도
+    tryLogin = async () => {
+      var formData = new FormData();
+      formData.append('id', document.getElementById('email').value);
+      formData.append('password', document.getElementById('password').value);
+      var succes = await fetch('/api/login_account', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
+      })
+      .then(async (response) => response.json())
+      .then(async (data) => {
+        var success = data["success"];
+        if (success == 'y') {
+          return true;
+        }
+        return false;
+      });
+
+      if (success) { // 로그인 성공
+        location.href = '/';
+      } else { // 로그인 실패
+        await Swal.fire({
+          html: `
+            <div>
+                <div class="text-center py-4">
+                    <h1 class="text-dark">로그인 실패</h1>
+                </div>
+                <diV class="text-start">
+                    <p class="text-secondary">
+                        아이디 또는 비밀번호가 일치하지 않습니다.
+                    </p>
+                </div>
+            </div>`,
+          icon: `error`,
+          showConfirmButton: true,
+          confirmButtonText: `확인`,
+          showCancelButton: false,
+          cancelButtonText: ``
+        }).then(() => {
+          // 로그인 실패 시 비밀번호 입력창 초기화
+          passwordInput.value = '';
+        });
+        return;
+      }
+    }
+  </script>
+</div>
+{% endblock %}

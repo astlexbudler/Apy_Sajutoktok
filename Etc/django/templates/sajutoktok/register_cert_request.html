@@ -1,0 +1,178 @@
+{% extends 'sajutoktok/_base.html' %}
+{% block content %}
+<div class="main-wrapper">
+
+  <!-- 헤더 -->
+  <!-- 로그인 페이지는 헤더 없음 -->
+
+  <section class="bg-light p-0 py-2" style="min-height: 100vh;">
+    <div class="container d-flex flex-column">
+      <div class="row align-items-center justify-content-center min-vh-100">
+        <div class="col-12 col-lg-8">
+
+          <!-- 뒤로가기 버튼 -->
+          <a class="small" href="javascript: window.history.back();">
+            <i class="fas fa-chevron-left"></i> 로그인 페이지로
+          </a>
+
+          <!-- 입력폼 카드 -->
+          <div class="card p-4">
+
+            <!-- 폼 타이틀 -->
+            <div class="my-4 text-center">
+              <h2 class="font-weight-normal mb-0">회원가입</h2>
+              <p class="mb-0">회원가입을 위해 이메일을 인증해주세요.</p>
+            </div>
+
+            <!-- 폼 입력창 -->
+            <form id="form" method="post" action="/register_cert_confirm">
+              {% csrf_token %}
+
+              <!-- 이메일 -->
+              <div class="form-group">
+                <label>이메일</label>
+                <input type="text" id="email" name="email" class="form-control" placeholder="이메일 주소를 입력해주세요.">
+              </div>
+
+              <!-- 약관 동의 -->
+              <div class="form-group mt-4">
+                <input type="checkbox" id="termsAgree" style="display: inline">
+                <label for="termsAgree" style="display: inline">
+                  사주톡톡 개인정보 처리 방침 및 이용약관에 동의합니다.
+                  <a href="javascript: window.open('/terms');">
+                    <u>
+                      이용약관 보기
+                    </u>
+                  </a>
+                </label>
+              </div>
+
+            </form>
+
+            <!-- 폼 제출 버튼 -->
+            <div class="row mt-2">
+              <div class="col-md-12">
+                <button onclick="requestCertCode();" class="butn style-one fill mt-4 mb-0 bg-primary">
+                  인증번호 발송
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    window.onload = () => {
+      console.log(`Window loaded at ${getNowDt()}`);
+    }
+
+    // 인증번호 발송 시도
+    requestCertCode = async () => {
+
+      // 이메일 양식 확인
+      if (!emailRegex.test(document.getElementById('email').value)) {
+        await Swal.fire({
+          html: `
+            <div>
+                <div class="text-center py-4">
+                    <h1 class="text-dark">이메일 주소</h1>
+                </div>
+                <diV class="text-start">
+                    <p class="text-secondary">
+                        이메일 주소를 확인해주세요.
+                    </p>
+                </div>
+            </div>`,
+          icon: `error`,
+          showConfirmButton: true,
+          confirmButtonText: `확인`,
+          showCancelButton: false,
+          cancelButtonText: ``
+        });
+        return
+      }
+
+      // 약관 동의 확인
+      if (!document.getElementById('termsAgree').checked) {
+        await Swal.fire({
+          html: `
+            <div>
+                <div class="text-center py-4">
+                    <h1 class="text-dark">약관 동의</h1>
+                </div>
+                <diV class="text-start">
+                    <p class="text-secondary">
+                        개인정보 처리 방침 및 이용약관에 동의해주세요.
+                    </p>
+                </div>
+            </div>`,
+          icon: `error`,
+          showConfirmButton: true,
+          confirmButtonText: `확인`,
+          showCancelButton: false,
+          cancelButtonText: ``
+        });
+        return
+      }
+
+      // 이메일 중복 가입 확인
+      var formData = new FormData();
+      formData.append('id', document.getElementById('email').value);
+      var exist = await fetch('/api/check_id', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
+      })
+      .then(async response => response.json())
+      .then(async data => {
+        var success = data['success'];
+
+        if (success == 'n') {
+          return true;
+        }
+        return false;
+      });
+
+      if (exist) {
+        await Swal.fire({
+          html: `
+            <div>
+                <div class="text-center py-4">
+                    <h1 class="text-dark">이미 가입된 이메일</h1>
+                </div>
+                <diV class="text-start">
+                    <p class="text-secondary">
+                        이미 가입된 이메일 주소입니다.
+                    </p>
+                </div>
+            </div>`,
+          icon: `error`,
+          showConfirmButton: true,
+          confirmButtonText: `확인`,
+          showCancelButton: false,
+          cancelButtonText: ``
+        });
+        return
+      }
+
+      // 인증번호 발송
+      await fetch('/api/request_cert_code', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': csrftoken
+        }
+      });
+
+      // 인증번호 입력창으로 이동
+      document.getElementById('form').submit();
+    }
+  </script>
+</div>
+{% endblock %}

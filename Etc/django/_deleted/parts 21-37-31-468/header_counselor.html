@@ -1,0 +1,255 @@
+{% if account.account_type == 'counselor' %}
+<header class="bg-white shadow">
+    <div class="navbar-default">
+        <div class="container">
+            <div class="menu_area">
+                <nav class="navbar navbar-expand-lg navbar-light p-0">
+                    <div class="navbar-header navbar-header-custom">
+                        <a href="#!" data-scroll-nav="0" class="navbar-brand dark-logo">
+                            <div style="height: 35px"></div>
+                        </a>
+                    </div>
+                    <div id="logo" style="position: absolute; width: 235px; height: 50px; background: url('/static/_sajutoktok/img/logo.png') left/contain no-repeat; cursor: pointer;" onclick="document.location.href='/'">
+                        <h4 class="text-dark" style="padding-top: 14px; padding-left: 60px;">상담가</h4>
+                    </div>
+                    <div class="navbar-toggler" style="background-color: transparent;"></div>
+                    <ul class="navbar-nav ms-auto" id="nav">
+                        {% if account.id == "" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">
+                                로그인
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <div class="p-1">
+                                <a class="small p-0" href="/profile_user">
+                                    <span class="small text-dark">
+                                        {{account.nickname}} 님
+                                    </span>
+                                    <div>
+                                        <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 20px; height: 20px;"> 
+                                        <span class="text-danger small">
+                                            <span class="price">{{account.point}}</span> 포인트
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript: logout();">
+                                로그아웃
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/chats">
+                                대화
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/notices">
+                                공지사항
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!">
+                                고객센터
+                            </a>
+                            <ul>
+                                <li>
+                                    <a  href="/contact">
+                                        이용문의
+                                    </a>
+                                </li>
+                                <li>
+                                    <a  href="javascript: window.open('/terms');">
+                                        이용약관 및 개인정보처리방침
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    {% if user.id != "" %}
+                    <div class="attr-nav">
+                        <ul>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle text-dark" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                                    <i class="fas fa-comment"></i>
+                                    {% if messages|length > 0 %}
+                                    <span class="badge bg-danger">{{ chats|length }}</span>
+                                    {% endif %}
+                                </a>
+                                <ul class="dropdown-menu cart-list bg-white">
+                                    {% if messages|length < 1 %}
+                                    <li>
+                                        <p class="text-secondary">알림이 없습니다.</p>
+                                    </li>
+                                    {% endif %}
+                                    {% for m in messages %}
+                                    <li style="border-bottom: 1px dashed gainsboro;" onclick="document.location.href='/chats'">
+                                        <h6>
+                                            <a href="#!" class="text-dark">
+                                                {{m.from_user.nickname}}
+                                            </a>
+                                        </h6>
+                                        <p class="text-secondary">
+                                            {{m.content}}<br>
+                                            <small>{{m.dt}}</small>
+                                        </p>
+                                    </li>
+                                    {% endfor %}
+                                    <li class="total" style="background: #247bfe;">
+                                        <span class="pull-left">알림센터</span>
+                                        <a href="javascript: askInitMessage('{{request.session.login_id}}');" class="butn small white text-secondary">
+                                            지우기
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% else %}
+<header class="bg-white shadow">
+    <div class="navbar-default">
+        <div class="container">
+            <div class="menu_area">
+                <nav class="navbar navbar-expand-lg navbar-light p-0">
+                    <div class="navbar-header navbar-header-custom">
+                        <a href="#!" data-scroll-nav="0" class="navbar-brand dark-logo">
+                            <div style="height: 35px"></div>
+                        </a>
+                    </div>
+                    <div id="logo" style="position: absolute; width: 235px; height: 50px; background: url('/static/_sajutoktok/img/content/logo.png') left/contain no-repeat; cursor: pointer;" onclick="document.location.href='/'">
+                        <h4 class="text-dark" style="padding-top: 14px; padding-left: 60px;">사주톡톡</h4>
+                    </div>
+                    <div class="navbar-toggler" style="background-color: transparent;"></div>
+                    <ul class="navbar-nav ms-auto" id="nav">
+                        {% if account.id == "" %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/login">
+                                로그인
+                            </a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <div class="p-3">
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div style="display: inline-block; text-align: left;">
+                                        <span class="h6">
+                                            {{account.nickname}}
+                                        </span>
+                                        님
+                                        <div>
+                                            <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> 
+                                            <span class="text-danger small">
+                                                <span class="price">{{account.point}}</span> 포인트
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div style="display: inline-block; text-align: right;">
+                                        <div>
+                                            <a class="small p-0" href="/profile_user">
+                                                프로필 >
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="javascript: logout();">
+                                로그아웃
+                            </a>
+                        </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="/chats">
+                                대화
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/notices">
+                                공지사항
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/all_reviews">
+                                모든 리뷰 보기
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/profile_user_point_shop">
+                                포인트 충전
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#!">
+                                고객센터
+                            </a>
+                            <ul>
+                                <li>
+                                    <a  href="/contact">
+                                        이용문의
+                                    </a>
+                                </li>
+                                <li>
+                                    <a  href="javascript: window.open('/terms');">
+                                        이용약관 및 개인정보처리방침
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    {% if user.id != "" %}
+                    <div class="attr-nav">
+                        <ul>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle text-dark" id="dropdownMenuLink" data-bs-toggle="dropdown">
+                                    <i class="fas fa-comment"></i>
+                                    {% if messages|length > 0 %}
+                                    <span class="badge bg-danger">{{ chats|length }}</span>
+                                    {% endif %}
+                                </a>
+                                <ul class="dropdown-menu cart-list bg-white">
+                                    {% if messages|length < 1 %}
+                                    <li>
+                                        <p class="text-secondary">알림이 없습니다.</p>
+                                    </li>
+                                    {% endif %}
+                                    {% for m in messages %}
+                                    <li style="border-bottom: 1px dashed gainsboro;" onclick="document.location.href='/chats'">
+                                        <h6>
+                                            <a href="#!" class="text-dark">
+                                                {{m.from_user.nickname}}
+                                            </a>
+                                        </h6>
+                                        <p class="text-secondary">
+                                            {{m.content}}<br>
+                                            <small>{{m.dt}}</small>
+                                        </p>
+                                    </li>
+                                    {% endfor %}
+                                    <li class="total" style="background: #247bfe;">
+                                        <span class="pull-left">알림센터</span>
+                                        <a href="javascript: askInitMessage('{{request.session.login_id}}');" class="butn small white text-secondary">
+                                            지우기
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                    {% endif %}
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+{% endif %}

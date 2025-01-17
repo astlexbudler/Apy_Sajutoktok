@@ -1,0 +1,289 @@
+{% extends 'sajutoktok/_base.html' %}
+{% block content %}
+<div class="main-wrapper">
+
+  <!-- 헤더 -->
+  {% if account.type == 'counselor' %}
+  {% include "sajutoktok/parts/header_counselor.html" %}
+  {% else %}
+  {% include "sajutoktok/parts/header_user.html" %}
+  {% endif %}
+
+  <section class="m-0 p-0 py-4" style="min-height: 100vh;">
+    <div class="container">
+
+      <!-- 뒤로가기 버튼 -->
+      <!-- 메인 페이지에는 뒤로가기 버튼 표시 안함 -->
+
+      <!-- 카테고리 컨테이너 제목 -->
+      <div class="mt-2 mb-5">
+        <h5>
+          카테고리
+        </h5>
+        <small>
+          상담 카테고리를 선택해주세요.
+        </small>
+      </div>
+
+      <!-- 카테고리 선택 -->
+      <div class="row mx-2 mb-5">
+        <div class="col-12 col-sm-7 col-lg-4 p-2">
+          <a href="search?category=tel" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    전화 상담
+                  </h2>
+                  <p class="small text-dark">
+                    전화로 간편하게 고민을 해결해요
+                  </p>
+                </div>
+                <div style="display: inline-block;">
+                  <img src="/static/_sajutoktok/img/content/video-call.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-5 col-lg-4 p-2">
+          <a href="search?category=chat" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    채팅 상담
+                  </h2>
+                  <p class="small text-dark">
+                    한 글자도 소중하게
+                  </p>
+                </div>
+                <div style="display: inline-block;">
+                  <img src="/static/_sajutoktok/img/content/message_bubbles.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="search?category=meet" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    대면 상담
+                  </h2>
+                  <p class="small text-dark">
+                    대면 상담으로 더욱 명쾌한 해답을
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right;">
+                  <img src="/static/_sajutoktok/img/content/conversation.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="search?category=cafe" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    카페 상담
+                  </h2>
+                  <p class="small text-dark">
+                    커피를 마시면서 편안하게
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right; height: 120px;">
+                  <img src="/static/_sajutoktok/img/content/coffee.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="#" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    점사 마켓
+                  </h2>
+                  <p class="small text-dark">
+                    복을 부르는 행운의 상품
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right;">
+                  <img src="/static/_sajutoktok/img/content/shopping_bag.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="#" style="text-decoration: none;">
+            <div class="rounded shadow border p-3">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    클래스
+                  </h2>
+                  <p class="small text-dark">
+                    점사 전문가의 명강의 클래스
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right;">
+                  <img src="/static/_sajutoktok/img/content/blackboard.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 서비스 컨테이너 제목 -->
+      <div class="mt-4 mb-3">
+        <h5>
+          서비스
+        </h5>
+        <small>
+          사주톡톡의 다양한 서비스를 확인해보세요.
+        </small>
+      </div>
+
+      <!-- 서비스 선택 -->
+      <div class="row mx-2 mb-5">
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="/notices" style="text-decoration: none;">
+            <div class="rounded shadow border p-3 bg-white">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    공지사항
+                  </h2>
+                  <p class="small text-dark">
+                    공지사항을 확인해보세요.
+                  </p>
+                </div>
+                <div style="display: inline-block;">
+                  <img src="/static/_sajutoktok/img/content/megaphone2.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="/events" style="text-decoration: none;">
+            <div class="rounded shadow border p-3 bg-white">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    이벤트
+                  </h2>
+                  <p class="small text-dark">
+                    다양한 이벤트를 확인해보세요.
+                  </p>
+                </div>
+                <div style="display: inline-block;">
+                  <img src="/static/_sajutoktok/img/content/event2.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="/all_reviews" style="text-decoration: none;">
+            <div class="rounded shadow border p-3 bg-white">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    후기
+                  </h2>
+                  <p class="small text-dark">
+                    상담 후기들을 확인
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right;">
+                  <img src="/static/_sajutoktok/img/content/review.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="/point_shop" style="text-decoration: none;">
+            <div class="rounded shadow border p-3 bg-white">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    포인트 상점
+                  </h2>
+                  <p class="small text-dark">
+                    사주톡톡 포인트를 충전하세요.
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right; height: 120px;">
+                  <img src="/static/_sajutoktok/img/content/coin.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="col-12 col-sm-6 col-lg-4 p-2">
+          <a href="/point_shop" style="text-decoration: none;">
+            <div class="rounded shadow border p-3 bg-white">
+              <div style="display: flex; justify-content: space-between; height: 120px;">
+                <div style="display: inline-block; text-align: left; width: calc(100% - 85px);">
+                  <h2 style="font-size: 20px;">
+                    고객센터
+                  </h2>
+                  <p class="small text-dark">
+                    궁금한 점이 있으신가요?
+                  </p>
+                </div>
+                <div style="display: inline-block; text-align: right; height: 120px;">
+                  <img src="/static/_sajutoktok/img/content/question.png"
+                    style="width: 60px; height: 60px; margin-top: 30px;">
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <!-- 전문가 등록 버튼 -->
+      <div class="container my-5">
+        <a href="/register">
+          <img src="/static/_sajutoktok/img/content/counselor_reg.png" style="width: 100%; max-width: 300px;">
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 네비게이션 바 -->
+  {% include "sajutoktok/parts/bottom_menu.html" %}
+
+  <script>
+    window.onload = () => {
+      console.log(`Window loaded at ${getNowDt()}`);
+      // price format
+      document.querySelectorAll('.price').forEach(price => {
+        price.innerHTML = price.innerHTML.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      });
+    }
+  </script>
+</div>
+{% endblock %}

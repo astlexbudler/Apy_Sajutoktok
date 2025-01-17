@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="bg-light p-0 py-2">
+                <div class="container d-flex flex-column">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <div class="col-12 col-lg-8">
+
+                            <!-- goback -->
+                            <a class="small" href="javascript: window.history.back();">
+                                < 뒤로가기
+                            </a>
+
+                            <!-- logo -->
+                            <div class="logo-index text-center">
+                                <img src="/static/_sajutoktok/img/content/logo.png" style="min-width: 200px; width: 15vw;" class="my-2"/>
+                                <h4 class="mt-2">사주톡톡</h4>
+                            </div>
+
+                            <!-- login form -->
+                            <div class="container">
+                                <div class="row" onkeyup="if(event.keyCode == 13) tryLogin();">
+                                    <div class="col-12">
+                                        <div class="form-group text-start">
+                                            <label>이메일 또는 상담사 아이디</label>
+                                            <input class="form-control" id="email" placeholder="이메일 또는 상담사 아이디를 입력해주세요.">
+                                        </div>
+                                    </div>
+                                    <div class="col-12">
+                                        <div class="form-group text-start">
+                                            <label>비밀번호</label>
+                                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요.">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="text-start text-small">
+                                        <a href="/forgot_cert_request" class="small"><u>비밀번호를 잊으셨나요?</u></a>
+                                    </div>
+                                    <div class="col-md-12 center">
+                                        <button onclick="tryLogin();" class="butn style-one fill mt-4 mb-0 bg-primary col-12 col-lg-3">로그인</button>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="text-center py-1 col-12 col-xl-4">
+                                        <a href="#">
+                                            <div class="rounded" style="width: 100%; height: 50px; background: url('/static/_sajutoktok/img/icon/apple.png') left/contain no-repeat #000000; cursor: pointer;">
+                                                <h6 class="text-white" style="padding-top: 16px;">Sign in with Apple</h6>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="text-center py-1 col-12 col-xl-4">
+                                        <a href="#">
+                                            <div class="rounded" style="width: 100%; height: 50px; background: url('/static/_sajutoktok/img/icon/naver.png') left/contain no-repeat #08c45c; cursor: pointer;">
+                                                <h6 class="text-white" style="padding-top: 16px;">네이버 로그인</h6>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="text-center py-1 col-12 col-xl-4">
+                                        <a href="#">
+                                            <div class="rounded" style="width: 100%; height: 50px; background: url('/static/_sajutoktok/img/icon/kakao.png') left/contain no-repeat #fde50e; cursor: pointer;">
+                                                <h6 class="text-dark" style="padding-top: 16px;">카카오 로그인</h6>
+                                            </div>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="text-start small mt-4">
+                                    아직 회원이 아니신가요? <a href="/register_cert_request"><u>회원가입</u></a>
+                                </div>
+                                <div style="height: 50px;"></div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // elements
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            tryLogin = async () => {
+                var email = emailInput.value;
+                var password = SHA256(passwordInput.value);
+                var formData = new FormData();
+                formData.append('id', email);
+                formData.append('password', password);
+                await fetch('/api/login_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data["success"];
+
+                    if (success == 'y') {
+                        window.location.href = '/';
+                    } else {
+                        var countLeft = data["count"];
+                        Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">로그인 실패</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        아이디 또는 비밀번호가 일치하지 않습니다.<br>
+                                        ${countLeft}회 시도 후 10분간 로그인이 불가능합니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `error`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then(() => {
+                            passwordInput.value = '';
+                        });
+                    }
+                })
+            }
+        </script>
+
+    </body>
+
+</html>

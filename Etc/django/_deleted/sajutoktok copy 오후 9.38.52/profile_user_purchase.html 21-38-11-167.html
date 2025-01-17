@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- HEADER
+            ================================================== -->
+            {% include "_sajutoktok/parts/header.html" %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4">
+                <div class="container">
+
+                    <!-- goback -->
+                    <a class="small" href="javascript: window.history.back();">
+                        < 뒤로가기
+                    </a>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-5">
+                        <h5>
+                            포인트 충전
+                        </h5>
+                        <small>
+                            아래 내용을 확인하시고 결제를 진행해주세요.
+                        </small>
+                    </div>
+
+                    <!-- content -->
+                    <div class="my-4">
+                        <div class="account-sidebar">
+                            <div class="account-widget personal-data">
+
+                                <div style="display: flex; justify-content: space-between;">
+                                    <div class="row w-100">
+                                        <h5>{{item.name}}</h5>
+
+                                        <div class="text-end mt-2">
+                                            {% if item.discount_percentage != '0' %}
+                                            <h6><del><span class="price">{{item.origin_price}}</span>원</del></h6>
+                                            {% endif %}
+                                            <h5 class="text-danger">
+                                                <span class="price">{{item.final_price}}</span>원
+                                            </h5>
+
+                                            <div class="my-4">
+                                                {{item.description}}
+                                            </div>
+
+                                            <div class="my-4">
+                                                <p class="text-start m-0">
+                                                    <b>상품(서비스) 제공 약관</b>
+                                                </p>
+                                                <div class="rounded border" style="height: 300px; overflow-y: auto;">
+                                                    1.이 약관에서 사용하는 용어의 정의는 다음과 같다.
+㉠ 회원: 이 약관에서 승인하고 회사와 서비스이용계약을 체결한 자를 말한다.
+㉡ 이용자: 사이트에 접속하여 이 약관에 따라 서비스를 이용하는 회원 및 회원이 아닌 자를 말한다.
+㉢ 아이디(ID): 회원의 식별과 서비스 이용을 위하여 회원이 설정하고 회사가 승인한 전자우편 주소나 기타 문자나숫자의 조합을 말한다.
+㉣ 비밀번호: 회원의 동일성 확인과 회원정보의 보호를 위하여 회원이 설정하고 회사가 승인한 문자나 숫자의 조합을 말한다.
+㉤ 어플리케이션 또는 앱: 모바일 운영체제인 iOS 및 Android 환경에서 작동할 수 있는 어플리케이션을 말하며, 이 약관에서는 별다른 부가설명이 없는 경우 ‘애플리파이’,’애플리파이애플리케이션스(applifyapplications.com)’,‘애플리파이아이디에스(applifyids.com)’, ’디지메뉴’, ‘에브리푸시’, ‘앱토스터’ 등 회사의 브랜드를 통해 작성된 어플리케이션을 뜻한다.
+㉥ 푸시알림: 어플리케이션의 소유자 또는 관리자의 의사로 어플리케이션을 설치한 자의 이동통신기기로 알림을 보내는 것을 말하며, 이 약관에서는 별다른 부가설명이 없는 경우 ‘애플리파이’, ’애플리파이애플리케이션스(applifyapplications.com)’, ‘애플리파이아이디에스(applifyids.com)’, ’디지메뉴’, ‘에브리푸시’, ‘앱토스터’ 등 회사의 브랜드를 가진 웹사이트를 통해 작동하는 기술 및 기능을 뜻한다.
+㉦ 메일발송 푸시알림: 어플리케이션의 소유자 또는 관리자의 의사로 어플리케이션을 설치한 자의 이동통신기기로 알림을 보내는 때 미리 약정된 전자우편 주소와 SMPT 서버를 이용하는 것을 말하며, 이 약관에서는 별다른 부가설명이 없는 경우 회사의 정보자산 및 전자우편주소를 통해 통신, 작동하는 기술 및 기능을 뜻한다.
+㉧ 예약발송: 특정 시간대 발송이 가능하고 어플리케이션 소유자 또는 관리자의 의사로 발송 취소가 가능한 푸시알림 발송방법을 말한다.
+㉨ 제휴사: 회사와 계약을 체결하여 이용자에게 상품, 서비스 등을 제공하는 서비스의 전반적 관리와 원활한 운영을 위하여 회사에서 선정하는 자를 말한다.
+㉩ 운영자: 회사에서 제공하는 서비스의 전반적인 관리와 원활한 운영을 위하여 회사에서 선정한 자를 말한다.
+㉪ 발주: 이용자의 요청에 따라 회사가 수행하는 모바일 어플리케이션 제작 및 배포에 대한 용역사업을 말한다.
+㉫ 구독: 회사가 제공하는 상품 및 서비스를 이용하기 위해, 이용자가 정기적으로 회사에 서비스 요금을 납부하는 형태를 말한다.
+㉬ 계정 활성화와 비활성화: 구독 및 서비스 결제 여부, 이용약관 위반 등의 조건에 따라 회사가 제공하는 서비스의 이용이 가능한지 그렇지 않은지를 회사가 결정하는 행위를 말한다.
+
+제 3조(약관의 명시, 효력 및 개정)
+1.회사는 이 약관의 내용을 이용자가 쉽게 알 수 있도록 서비스 초기 화면 및 가입절차 페이지에 게시한다.
+2.회사는 관련 법령을 위배하지 아니하는 범위에서 이 약관을 개정할 수 있다.
+3.회사가 약관을 개정하는 경우에 적용일자 및 개정사유를 명시하여 현행약관과 함께 서비스의 초기화면에 그 적용일자 7일 전부터 적용일자 전일까지 공지한다. 단, 소비자에게 불리하게 계약내용을 변경하는 경우에는 그 적용일자 30일 전에 SMS 발송, 전자우편 등의 방법으로 고지하거나 서비스 첫 화면 등을 통해 공지하여야 한다.
+4.회사가 제 3항에 따라 개정 약관을 공지 또는 통지하면서 회원에게 적용일 전까지 의사표시를 하지 않으면 의사가 표명된 것으로 본다는 뜻을 명확하게 공지 또는 통지하였음에도 (회원에게 불리한 약관의 개정은 제 3항 외에 회원에 대한 전자우편 발송 등 전자적 수단을 통하여 별도로 명확히 통지) 회원이 명시적으로 거부의사를 표시하지 아니한 경우 회원이 개정약관에 동의한 것으로 본다.
+5.이 약관에서 정하지 아니한 사항과 이 약관의 해석에 관하여는 전자상거래 등에서의 소비자보호에 관한 법률 및 관계법령 또는 상관례에 따른다.
+
+제 2장 서비스 계약 및 이용자 정보
+
+제 4조 (서비스이용계약의 성림)
+1.회사가 제공하는 서비스를 이용하고자 하는 자는 회사가 요청하는 양식에 따라 필요한 사항을 기재하여야 하고, 서비스의 이용에 필요한 개인정보 수집 및 이용, 개인정보 제3자 제공, 개인정보 위탁에 동의하여야 한다.
+2.이용신청자는 실명 또는 별명으로 가입신청을 할 수 있으나, 타인의 실명정보를 도용하여 회원으로 가입한 자는 회사가 제공하는 서비스를 이용하는 것을 금지한다.
+3.회사의 서비스 이용을 위한 회원가입은 서비스 이용자가 제 1항과 같이 동의한 후, 회사가 정한 온라인 회원가입 신청서에 따라 ‘인증’ 또는 ‘확인’ 버튼을 누르는 방법으로 한다. 단, 회사가 필요하다고 인정하는 경우 회원에게 별도의 서류를 제출하도록 할 수 있다.
+
+제 5조 (이용신청)
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="pgcode">결제 방식 선택</label>
+                                            <select class="form-control form-select" id="pgcode">
+                                                <option value="creditcard" selected>신용카드</option>
+                                                <option value="banktransfer">인터넷뱅킹(금융결제원)</option>
+                                                <option value="virtualaccount">가상계좌</option>
+                                                <option value="mobile">휴대폰</option>
+                                                <option value="voucher">문화상품권</option>
+                                                <option value="book">도서상품권</option>
+                                                <option value="culture">컬쳐랜드상품권</option>
+                                                <option value="smartculture">스마트문상</option>
+                                                <option value="happymoney">해피머니상품권</option>
+                                                <option value="mobilepop">모바일팝</option>
+                                                <option value="teencash">틴캐시</option>
+                                                <option value="tmoney">교통카드결제</option>
+                                                <option value="cvs">편의점캐시</option>
+                                                <option value="eggmoney">에그머니</option>
+                                                <option value="oncash">온캐시</option>
+                                                <option value="phonebill">폰빌</option>
+                                                <option value="cashbee">이즐</option>
+                                                <option value="kakaopay">카카오페이</option>
+                                                <option value="payco">페이코</option>
+                                                <option value="checkpay">체크페이</option>
+                                                <option value="toss">토스</option>
+                                                <option value="ssgpay">SSG페이</option>
+                                                <option value="naverpay">네이버페이</option>
+                                                <option value="samsungpay">삼성페이</option>
+                                                <option value="smilepay">스마일페이</option>
+                                                <option value="applepay">애플페이</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="checkbox" class="custom-control-input" id="receipt" style="display: inline;">
+                                            <label class="custom-control-label display-30" for="receipt" style="display: inline;">
+                                                현금영수증 신청 소득공제 또는 지출 증빙용 (선택)
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button class="btn btn-primary" onclick="requestPurchase();">
+                                        <i class="fas fa-credit-card"></i> 상품(서비스) 제공 약관 동의 후 결제하기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FOOTER
+        ================================================== -->
+        {% include "_sajutoktok/parts/footer.html" %}
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+        <script>
+            // variables
+            var itemId = '{{item.id}}';
+
+            // elements
+            const pgcodeInput = document.getElementById("pgcode");
+            const receiptFlag = document.getElementById("receipt");
+
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                document.querySelectorAll('.price').forEach((element) => {
+                    element.innerHTML = element.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+                });
+            }
+
+            requestPurchase = async () => {
+                var pgcode = pgcodeInput.value;
+                var receipt = receiptFlag.checked ? 'Y' : 'N';
+
+                var formData = new FormData();
+                formData.append('pgcode', pgcode);
+                formData.append('receipt_flag', receipt);
+                formData.append('item_id', itemId);
+
+                await fetch('/pl/pl_request_purchase', {
+                    method: 'post',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: formData
+                })
+                .then((response) => response.json())
+                .then((data) => {
+                    console.log(data);
+
+                    var success = data['success'];
+                    if (success == 'y') {
+                        var token = data['token'];
+                        var online_url = data['online_url'];
+                        var mobile_url = data['mobile_url'];
+                        var userAgent = checkUserAgent();
+
+                        if (userAgent == 'pc') {
+                            document.location.href = online_url;
+                        } else {
+                            document.location.href = mobile_url;
+                        }
+                    } else {
+                        var error = data['error'];
+                        alert(error);
+                        return
+                    }
+                });
+            }
+
+            testPurchase = async () => {
+                var formData = new FormData();
+                formData.append('item_id', itemId);
+                formData.append('user_id', '{{account.id}}');
+                await fetch('/api/test_purchasement', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(response => response.json())
+                .then((data) => {
+                    var success = data['success'];
+
+                    if (success == 'y') {
+                        Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">결제 완료(TEST)</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        결제가 완료되었습니다. 구매내역은 마이페이지에서 확인하실 수 있습니다.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `success`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        }).then(() => {
+                            window.location.href = '/profile_user_purchases';
+                        });
+                    } else {
+                        var error = data['error'];
+                        alert(error);
+                    }
+                })
+            }
+        </script>
+
+    </body>
+
+</html>

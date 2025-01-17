@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper" style="min-height: 100vh;">
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="bg-light p-0">
+                <div class="container d-flex flex-column">
+                    <div class="row align-items-center justify-content-center min-vh-100">
+                        <div class="col-12 col-lg-8">
+
+                            <!-- goback -->
+                            <a class="small" href="javascript: window.history.back();">
+                                <i class="fa fa-chevron-left"></i> 뒤로가기
+                            </a>
+
+                            <div class="card p-4">
+
+                                <!-- title -->
+                                <div class="mb-4 text-center">
+                                    <h2 class="font-weight-normal mb-0">이이디/비밀번호 찾기</h2>
+                                    <p class="mb-0">회원가입 시 사용했던 이메일(아이디)를 인증해주세요.</p>
+                                </div>
+
+                                <form id="form" method="post" action="/forgot_cert_confirm">
+                                    {% csrf_token %}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label>이메일</label>
+                                                <input type="text" id="email" name="email" class="form-control" placeholder="이메일 주소를 입력해주세요.">
+                                            </div>
+                                            <div class="form-group mt-4">
+                                                <input type="checkbox" id="termsAgree" style="display: inline">
+                                                <label for="termsAgree" style="display: inline">
+                                                    사주톡톡 개인정보 처리 방침 및 이용약관에 동의합니다.
+                                                        <a href="javascript: window.open('/terms');">
+                                                            <u>
+                                                                이용약관 보기
+                                                            </u>
+                                                        </a>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                                <div class="row mt-2">
+                                    <div class="col-md-12 center">
+                                        <button onclick="tryFind();" class="butn style-one fill mt-4 mb-0 bg-primary col-12 col-lg-3">인증번호 발송</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <script>
+            // variables
+            const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+            // elements
+            const emailInput = document.getElementById('email');
+            const form = document.getElementById('form');
+            const termsAgreeInput = document.getElementById('termsAgree');
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+            }
+
+            tryFind = async () => {
+                if (!emailRegex.test(emailInput.value)) {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">이메일 주소</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    이메일 주소를 확인해주세요.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `error`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``
+                    });
+                    return
+                }
+
+                // check terms agree
+                if (!termsAgreeInput.checked) {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">약관 동의</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    개인정보 처리 방침 및 이용약관에 동의해주세요.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `error`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``
+                    });
+                    return
+                }
+
+                if (!termsAgreeInput.checked) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: '개인정보 처리 방침 및 이용약관에 동의해주세요.',
+                        showConfirmButton: false,
+                        timer: 1500
+                    });
+                    return;
+                }
+
+                // check already registered
+                var formData = new FormData();
+                formData.append('id', emailInput.value);
+                await fetch('/api/check_email', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                }).then(async response => response.json())
+                .then(async data => {
+                    var success = data['success'];
+
+                    if (success == 'n') {
+                        formData.append('email', emailInput.value);
+                        await fetch('/api/request_cert_code', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        })
+                        .then(() => form.submit());
+                    } else {
+                        Swal.fire({
+                            html: `
+                            <div>
+                                <div class="text-center py-4">
+                                    <h1 class="text-dark">계정 없음</h1>
+                                </div>
+                                <diV class="text-start">
+                                    <p class="text-secondary">
+                                        가입한 계정을 찾을 수 없습니다.<br<
+                                        이메일 주소를 확인해주세요.
+                                    </p>
+                                </div>
+                            </div>`,
+                            icon: `error`,
+                            showConfirmButton: true,
+                            confirmButtonText: `확인`,
+                            showCancelButton: false,
+                            cancelButtonText: ``
+                        });
+                        return
+                    }
+                });
+            }
+        </script>
+
+    </body>
+
+</html>

@@ -1,0 +1,2158 @@
+<!DOCTYPE html>
+<html lang="ko">
+    {% load static %}
+    {% csrf_token %}
+
+    <head>
+
+        <meta name="robots" content="noindex, nofollow">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>사주톡톡</title>
+
+        <!-- favicon
+        ================================================== -->
+        <link rel="icon" type="image/png" href="/static/_sajutoktok/img/logos/favicon.png">
+        <link rel="shortcut icon" href="/static/_sajutoktok/img/logos/favicon.png" />
+        <link rel="apple-touch-icon" href="/static/_sajutoktok/img/logos/apple-touch-icon-57x57.png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/static/_sajutoktok/img/logos/apple-touch-icon-72x72.png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/static/_sajutoktok/img/logos/apple-touch-icon-114x114.png" />
+
+        <!-- style
+        ================================================== -->
+        <link rel="stylesheet" href="/static/_sajutoktok/css/plugins.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/custom.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/styles.css"/>
+        <link rel="stylesheet" href="/static/_sajutoktok/css/index.css"/>
+        <link rel="stylesheet" href="/static/search/search.css"/>
+        <link rel="stylesheet" href="/static/quform/css/base.css"/>
+
+    </head>
+
+    <body style="word-break: keep-all;" class="bg-white">
+
+        <!-- PAGE LOADING ================================================== -->
+        <div id="preloader"></div>
+
+        <!-- MAIN WRAPPER ================================================== -->
+        <div class="main-wrapper">
+
+            <!-- HEADER
+            ================================================== -->
+            {% if account.account_type == 'counselor' %}
+            {% include "_sajutoktok/parts/header_counselor.html" %}
+            {% else %}
+            {% include "_sajutoktok/parts/header_user.html" %}
+            {% endif %}
+
+            <!-- MAIN SECTION
+            ================================================== -->
+            <section class="m-0 p-0 my-4" style="min-height: 100vh;">
+                <div class="container">
+
+                    <!-- goback -->
+                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                        <div style="display: inline-block; text-align: left;">
+                            <a class="small" href="javascript: window.history.back();">
+                                < 뒤로가기
+                            </a>
+                        </div>
+                        <div style="display: inline-block; text-align: right;">
+                            <a class="small text-secondary" href="javascript: hideCounselor();">
+                                <i class="fa-solid fa-eye-slash"></i> 계정 숨기기
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- title -->
+                    <div class="mt-2 mb-3">
+                        <h5>
+                            상담가 계정
+                        </h5>
+                        <small>
+                            상담가 계정을 관리합니다.<br>
+                            프로필 정보를 수정할 수 있습니다.
+                        </small>
+                    </div>
+
+                    <!-- profile -->
+                    <div class="my-4">
+                        <div class="row">
+
+                            <!-- left -->
+                            <div class="col-12 col-md-4 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <div style="display: flex; justify-content: space-between;">
+                                            <div style="display: inline-block; text-align: left;">
+                                                <div>
+                                                    <h6>{{counselor.nickname}}</h6>
+                                                    <small>{{counselor.introduce}}</small>
+                                                </div>
+                                            </div>
+                                            <div style="display: inline-block; text-align: right;">
+                                                <div style="width: 50px;">
+                                                    <span class="text-danger">
+                                                        <i class="fa-xl fa-solid fa-heart"></i> {{counselor.likes}} 
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- profile -->
+                                    <div class="my-4">
+                                        <p class="small m-0 mb-2">
+                                            {% if counselor.services|length == 1 and counselor.services.0 == '' %}
+                                            <span class="badge bg-secondary" style="padding: 2px 6px 2px 6px; font-size: 12px;">없음</span>
+                                            {% endif %}
+                                            {% for service in counselor.services %}
+                                            {% if service == 'saju' %}
+                                            <span class="badge bg-success" style="padding: 2px 6px 2px 6px; font-size: 12px;">사주</span>
+                                            {% elif service == 'taro' %}
+                                            <span class="badge bg-primary" style="padding: 2px 6px 2px 6px; font-size: 12px;">타로</span>
+                                            {% elif service == 'jum' %}
+                                            <span class="badge bg-danger" style="padding: 2px 6px 2px 6px; font-size: 12px;">신점</span>
+                                            {% endif %}
+                                            {% endfor %}
+                                        </p>
+                                        <div class="shadow w-100 d-block d-md-none" style="max-height: 300px; height: 40vw; border-radius: 25px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                        <div class="shadow w-100 d-none d-md-block" style="max-height: 200px; height: 14vw; border-radius: 20px; background: url('{{counselor.photo}}') center/cover white;"></div>
+                                    </div>
+
+                                    <!-- buttons -->
+                                    <div class="my-4 pt-4">
+                                        <a href="/chat?opponent={{counselor.id}}" class="btn btn-primary me-2">
+                                            <i class="fa fa-comment"></i> 대화하기
+                                        </a>
+                                    </div>
+
+                                    <!-- review and stars -->
+                                    <p class="small mt-1">
+                                        <span class="me-2">
+                                            <i class="fa-solid fa-message text-info"></i> <b>후기</b>({{counselor.reviews_count}})
+                                        </span>
+                                        <span>
+                                            <i class="fa-solid fa-star text-info"></i> <b>{{counselor.review_avg}}</b>({{counselor.reviews_count}})
+                                        </span>
+                                    </p>
+
+                                    <!-- reviews -->
+                                    <div class="my-4">
+
+                                        <!-- title -->
+                                        <div class="mt-2 mb-5">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <h6>
+                                                        리뷰
+                                                    </h6>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small" href="/counselor_reviews?id={{counselor.id}}">
+                                                        < 더보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="row">
+                                            <div class="col-6 text-center border-end">
+                                                <p class="small m-0">
+                                                    후기
+                                                </p>
+                                                <h2>
+                                                    {{reviews|length}} 건
+                                                </h2>
+                                            </div>
+                                            <div class="col-6 text-center">
+                                                <p class="small m-0">
+                                                    평점
+                                                </p>
+                                                <h2>
+                                                    {{counselor.review_avg}} 점
+                                                </h2>
+                                            </div>
+                                        </div>
+    
+                                        <!-- reviews -->
+                                        <div class="my-4" id="infiniteBox">
+                                            {% if reviews|length < 1 %}
+                                            <p class="small">
+                                                아직 리뷰가 없습니다.
+                                            </p>
+                                            {% else %}
+                                            {% for review in reviews %}
+                                            <div class="py-3">
+                                                <div style="display: flex; justify-content: space-between;">
+                                                    <div style="display: inline-block; text-align: left;">
+                                                        <div>
+                                                            {% if review.star == 1 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 2 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 3 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 4 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star"></i>
+                                                            </span>
+                                                            {% elif review.star == 5 %}
+                                                            <b>{{review.user.nickname}}</b> 
+                                                            <span class="btn btn-light p-0 px-1" style='font-size: 12px'>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                                <i class="fa fa-star text-warning"></i>
+                                                            </span>
+                                                            {% endif %}
+                                                        </div>
+                                                        <p class="text-dark">
+                                                            {{review.content}}
+                                                        </p>
+                                                    </div>
+                                                    <div style="display: inline-block; text-align: right;">
+                                                        <a class="small text-danger" href="javascript: deleteTableData('REVIEW', '{{review.id}}');">
+                                                            <i class="fa fa-xmark"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                            {% endif %}
+                                        </div>
+    
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- right -->
+                            <div class="col-12 col-md-8 mt-2">
+                                <div class="shadow rounded border p-3">
+
+                                    <!-- title -->
+                                    <div class="mt-2 mb-5">
+                                        <h6>프로필 업데이트 콘솔</h6>
+                                        <small>
+                                            상담가의 프로필 정보를 수정합니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- photo -->
+                                    <div class="mb-4">
+                                        <i class="fa fa-user"></i> 아이디 및 비밀번호<br>
+                                        <small>
+                                            ID: {{counselor.id}}<br>
+                                        </small>
+                                        <a href="javascript: new bootstrap.Modal(accountPassword).show();">
+                                            <small>
+                                                Password: 수정하기
+                                            </small>
+                                            <i class='fa fa-pen'></i><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- photo -->
+                                    <div class="mb-4">
+                                        <h6>프로필 이미지</h6>
+                                        <a href="javascript: new bootstrap.Modal(mediaModal).show();">
+                                            <small><i class="fa fa-image"></i> 프로필 이미지 변경하기</small> <i class='fa fa-pen'></i><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- niname -->
+                                    <div class="mb-4">
+                                        <h6>닉네임</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountNickname).show();">
+                                            <small>{{counselor.nickname}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- tel -->
+                                    <div class="mb-4">
+                                        <h6>연락처</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountTel).show();">
+                                            <small>{{counselor.tel}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- email -->
+                                    <div class="mb-4">
+                                        <h6>이메일</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountEmail).show();">
+                                            <small>{{counselor.email}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- address -->
+                                    <div class="mb-4">
+                                        <h6>주소</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountAddress).show();">
+                                            <small>{{counselor.address}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                        <small>
+                                            상담가가 대면 또는 카페 상담을 제공하는 경우에만 필요합니다.<br>
+                                            자세한 주소 또는 활동 지역을 입력해주세요.(예: 서울시 강남구)
+                                        </small>
+                                    </div>
+
+                                    <!-- intro -->
+                                    <div class="mb-4">
+                                        <h6>짧은 소개</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountIntro).show();">
+                                            <small>{{counselor.introduce}}</small> <small><i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- detail -->
+                                    <div class="my-4">
+                                        <h6>상세 소개</h6>
+                                        <div>
+                                            {{counselor.detail|safe}}
+                                        </div>
+                                        <a href="javascript: new bootstrap.Modal(wysiwygModal).show();">
+                                            <small>소개 수정하기 <i class='fa fa-pen'></i></small><br>
+                                        </a>
+                                    </div>
+
+                                    <!-- point -->
+                                    <div class="mb-4">
+                                        <h6>정산 포인트</h6>
+                                        <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 24px; height: 24px;"> <small>{{counselor.point}}P</small><br>
+                                        <small>
+                                            정산 및 상담료 지급을 위한 포인트입니다.
+                                        </small>
+                                    </div>
+
+                                    <!-- status: online, busy, offlinen , hidden -->
+                                    <div class="mb-4">
+                                        <h6>상태</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountStatus).show();">
+                                            {% if counselor.status == 'online' %}
+                                            <span class="badge bg-primary p-1 px-2 mb-1">상담가능 <i class="fa-solid fa-phone"></i></span>
+                                            {% elif counselor.status == 'busy' %}
+                                            <span class="badge bg-danger p-1 px-2 mb-1">상담중 <i class="fa-solid fa-phone"></i></span>
+                                            {% elif counselor.status == 'offline' %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">오프라인 <i class="fa-solid fa-phone-slash"></i></span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">숨김 <i class="fa-solid fa-eye-slash"></i></span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                    <!-- services: taro, saju, jum -->
+                                    <div class="mb-4">
+                                        <h6>상담 서비스</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountService).show();">
+                                            {% if 'saju' in counselor.services %}
+                                            <span class="badge bg-success p-1 px-2 mb-1">사주</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">사주</span>
+                                            {% endif %}
+                                            {% if 'taro' in counselor.services %}
+                                            <span class="badge bg-primary p-1 px-2 mb-1">타로</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">타로</span>
+                                            {% endif %}
+                                            {% if 'jum' in counselor.services %}
+                                            <span class="badge bg-danger p-1 px-2 mb-1">신점</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">신점</span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                    <!-- categories: tel, chat, meet, cafe -->
+                                    <div class="mb-4">
+                                        <h6>상담 방식</h6>
+                                        <a href="javascript: new bootstrap.Modal(accountCategory).show();">
+                                            {% if 'tel' in counselor.categories %}
+                                            <span class="badge bg-success p-1 px-2 mb-1">전화 상담</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">전화 상담</span>
+                                            {% endif %}
+                                            {% if 'chat' in counselor.categories %}
+                                            <span class="badge bg-primary p-1 px-2 mb-1">채팅 상담</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">채팅 상담</span>
+                                            {% endif %}
+                                            {% if 'meet' in counselor.categories %}
+                                            <span class="badge bg-danger p-1 px-2 mb-1">대면 상담</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">대면 상담</span>
+                                            {% endif %}
+                                            {% if 'cafe' in counselor.categories %}
+                                            <span class="badge bg-warning p-1 px-2 mb-1">카페 상담</span>
+                                            {% else %}
+                                            <span class="badge bg-secondary p-1 px-2 mb-1">카페 상담</span>
+                                            {% endif %}
+                                        </a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- items -->
+                    <div class="my-4">
+                        <div class="rounded border p-3 shadow">
+                            <div class="my-4">
+                                <div class="mt-2 mb-5">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <h6>
+                                                서비스(상품)
+                                            </h6>
+                                            <small>
+                                                사주 상담가의 서비스(상품)를 확인합니다.
+                                            </small>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <a class="small" href="javascript: new bootstrap.Modal(itemWrite).show();">
+                                                + 서비스(상품) 등록
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="my-4">
+                                    <div class="rounded p-2 m-0 bg-light mb-4">
+                                        <b>
+                                            <img src="/static/_sajutoktok/img/icon/megaphone_only.png" style="width: 24px; height: 24px;"> 사주 상담 서비스
+                                        </b>
+                                        <p class="m-0 p-1" style="font-size: 12px;">
+                                            서비스 비용은 참고용으로만 제공되며, 실제 결제 시에는 금액을 수정할 수 있습니다.
+                                        </p>
+                                    </div>
+                                    {% if items|length < 1 %}
+                                    <p class="small">
+                                        제공되는 서비스가 없습니다.
+                                    </p>
+                                    {% else %}
+                                    <div class="row">
+                                        {% for item in items %}
+                                        <div class="col-6 col-md-4 col-lg-3 mb-4">
+                                            <div class="border rounded shadow">
+                                                <div class="p-3">
+                                                    <div style="display: flex; justify-content: space-between;">
+                                                        <div style="display: inline-block; text-align: left;">
+                                                            <p class="m-0 small">
+                                                                {% if item.service == 'saju' %}
+                                                                <span class="badge bg-success p-0 px-1 mb-1">사주</span>
+                                                                {% elif item.service == 'taro' %}
+                                                                <span class="badge bg-primary p-0 px-1 mb-1">타로</span>
+                                                                {% elif item.service == 'jum' %}
+                                                                <span class="badge bg-danger p-0 px-1 mb-1">신점</span>
+                                                                {% endif %}
+                                                            </p>
+                                                        </div>
+                                                        <div style="display: inline-block; text-align: right;">
+                                                            <a class="text-danger small" href="javascript: deleteTableData('ITEM', '{{item.id}}');">
+                                                                <i class="fa fa-xmark"></i>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                    <h6 class="card-title mb-2">
+                                                        {{item.name}}
+                                                    </h6>
+                                                    {% for category in item.category %}
+                                                    {% if category == 'tel' %}
+                                                    <span class="badge bg-success p-1 px-2 mb-1">전화 상담</span>
+                                                    {% elif category == 'chat' %}
+                                                    <span class="badge bg-primary p-1 px-2 mb-1">채팅 상담</span>
+                                                    {% elif category == 'meet' %}
+                                                    <span class="badge bg-danger p-1 px-2 mb-1">대면 상담</span>
+                                                    {% elif category == 'cafe' %}
+                                                    <span class="badge bg-warning p-1 px-2 mb-1">카페 상담</span>
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                    <hr>
+                                                    <span class="small">
+                                                        <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 20px; height: 20px;"> {{item.price}}P
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- blogs -->
+                    <div class="my-4">
+                        <div class="rounded border shadow p-3">
+                            <div class="my-4">
+
+                                <!-- title -->
+                                <div class="mt-2">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                <h6>
+                                                    블로그
+                                                </h6>
+                                                <small>
+                                                    사주 상담가의 게시글 확인합니다.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <div>
+                                                <a class="small" href="/counselor_blogs?id={{counselor.id}}">
+                                                    < 더보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row px-3 mb-4">
+                                    <div class="d-none d-lg-block col-3"></div>
+                                    <a class="btn btn-outline-secondary mt-4 col-12 col-lg-6" href="/profile_counselor_blog_write?id={{counselor.id}}">
+                                        <b class="text-dark">게시글 작성하기</b> <span class="text-info">></span>
+                                    </a>
+                                </div>
+
+                                <!-- blogs -->
+                                <div class="my-4">
+                                    {% if blogs|length < 1 %}
+                                    <p class="small">
+                                        게시글이 없습니다.
+                                    </p>
+                                    {% else %}
+                                    {% for blog in blogs %}
+                                    <div class="col-md-12 py-3">
+                                        <a href="/counselor_blog?id={{counselor.id}}&blog_id={{blog.id}}"class="text-dark">
+                                            {% if 'media' in blog.main_image %}
+                                            <div class="post-img w-100 rounded shadow mb-2" style="max-height: 300px; height: 28vw; background: url('{{blog.main_image}}') center/contain no-repeat darkgray;"></div>
+                                            {% endif %}
+                                            <p class="text-dark m-0">
+                                                {{blog.title}}
+                                            </p>
+                                            <small class="text-secondary">
+                                                {{blog.dt}}
+                                            </small>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- qnas -->
+                    <div class="my-4">
+                        <div class="rounded border p-3 shadow">
+                            <div class="my-4">
+                                <div class="mt-2 mb-5">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                <h6>
+                                                    1:1 문의
+                                                </h6>
+                                                <small>
+                                                    사주 상담가의 1:1 문의를 확인합니다.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <div style="width: 60px;">
+                                                <a class="small" href="/counselor_qnas?id={{counselor.id}}">
+                                                    < 더보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="my-4">
+
+                                    <div class="rounded p-2 mb-3 bg-light">
+                                        <b>
+                                            <img src="/static/_sajutoktok/img/icon/megaphone_only.png" style="width: 24px; height: 24px;"> 1:1 문의 게시판
+                                        </b>
+                                        <p class="m-0 p-1" style="font-size: 12px;">
+                                            답변은 상담가능 시간, 상담 내용에 대한 간단한 답변만 가능합니다.<br>
+                                            답변 시 전화번호, 이메일 등 개인정보를 제공하지 않도록 주의해주세요.
+                                        </p>
+                                    </div>
+
+                                    {% if qnas|length < 1 %}
+                                    <p class="small">
+                                        문의 내역이 없습니다.
+                                    </p>
+                                    {% else %}
+                                    {% for qna in qnas %}
+                                    <div class="col-md-12 py-3">
+                                        <a href="/counselor_qna?iid={{qna.id}}" class="text-dark">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <p class="text-dark m-0">
+                                                        {% if qna.comment|length < 1 %}
+                                                        [답변 대기중] 
+                                                        {% else %}
+                                                        [답변완료] 
+                                                        {% endif %}
+                                                        {{qna.title}}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <div>
+                                                        <a class="text-danger small" href="javascript: deleteTableData('POST', '{{qna.id}}');">
+                                                            <i class="fa fa-xmark"></i>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <small class="text-secondary">
+                                                {{qna.author.nickname}} | {{qna.dt}}
+                                            </small>
+                                        </a>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- purchase logs -->
+                    <div class="my-4">
+                        <div class="rounded border p-3 shadow">
+                            <div class="my-4">
+                                <div class="mt-2 mb-5">
+                                    <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                        <div style="display: inline-block; text-align: left;">
+                                            <div>
+                                                <h6>
+                                                    포인트 내역
+                                                </h6>
+                                                <small>
+                                                    상담가의 포인트 내역을 확인합니다.
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; text-align: right;">
+                                            <div style="width: 60px;">
+                                                <a class="small" href="/counselor_purchases?id={{counselor.id}}">
+                                                    < 더보기
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="my-4">
+                                    {% if purchases|length < 1 %}
+                                    <p class="small">
+                                        포인트 내역이 없습니다.
+                                    </p>
+                                    {% else %}
+                                    {% for purchase in purchases %}
+                                    <div class="col-12 mb-3">
+                                        <div class="border rounded shadow p-3">
+                                            <div style="display: flex; justify-content: space-between; white-space: nowrap;">
+                                                <div style="display: inline-block; text-align: left;">
+                                                    <p class="m-0 small">
+                                                        {{purchase.dt}} 
+                                                            {% if purchase.pgcode == 'adjust' %}
+                                                            (사주톡톡)
+                                                            {% elif purchase.pgcode == 'point' %}
+                                                            ({{user.nickname}})
+                                                            {% else %}
+                                                            (페이레터)
+                                                            {% endif %}
+                                                    </p>
+                                                </div>
+                                                <div style="display: inline-block; text-align: right;">
+                                                    <a class="small text-secondary" href="javascript: window.open('/purchase_detail?id={{purchase.id}}', 'purchase', 'width=800, height=600, left=100, top=100, scrollbars=yes, resizable=yes');">
+                                                        < 상세보기
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <span class="h6">
+                                                <img src="/static/_sajutoktok/img/icon/coin.png" style="width: 20px; height: 20px;"> {{purchase.price}}P
+                                            </span>
+                                            <p class="m-0 small">
+                                                {{purchase.log}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+        </div>
+
+        <!-- FIXED BUTTONS
+        ================================================== -->
+        <a href="#!" class="scroll-to-top"><i class="fas fa-angle-up" aria-hidden="true"></i></a>
+
+        <!-- MODALS
+        ================================================== -->
+        <!-- WYSIWYG -->
+        <div class="modal fade" id="wysiwygModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">텍스트 편집기</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="editor-controls">
+                                <select id="fontSize" class="control-select">
+                                    <option value="1">매우 작게</option>
+                                    <option value="2">작게</option>
+                                    <option value="3" selected>보통</option>
+                                    <option value="4">큼</option>
+                                    <option value="5">더 큼</option>
+                                    <option value="6">매우 큼</option>
+                                    <option value="7">최대</option>
+                                </select>
+                                <button id="boldToggleButton" class="editor-button" onclick="formatText('bold')">B</button>
+                                <button id="underlineToggleButton" class="editor-button" onclick="formatText('underline')">U</button>
+                                <button id="italicToggleButton" class="editor-button" onclick="formatText('italic')">I</button>
+                            </div>
+                            <div contenteditable="true" id="content">
+                                {{counselor.detail}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="setWysiwyg();">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEDIA -->
+        <div class="modal fade" id="mediaModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">미디어 업로드</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+
+                            <!-- media select -->
+                            <div class="row">
+                                <div class="form-group">
+                                    <label>미디어 타입</label>
+                                    <select class="form-control form-select" id="mediaType">
+                                        <option value="single_image" selected>이미지</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- single image upload -->
+                            <div class="row" id="singleImage">
+                                <div class="form-group">
+
+                                    <!-- 이미지 0 -->
+                                    <div class="preview5">
+                                        <div class="mb-4" style="margin:0 auto; width: 48vw; max-width: 350px;">
+                                            <div class="w-100 bg-dark text-end" style="background: url() center/contain no-repeat grey; height: 48vw; padding-right: 6px; max-height: 350px;"></div>
+                                        </div>
+                                    </div>
+
+                                    <label>이미지</label><br>
+                                    <small>단일 이미지의 경우 가로 크기가 최대로 설정됩니다.</small>
+                                </div>
+                            </div>
+
+                            <!-- image upload -->
+                            <div class="row" id="imageUpload">
+                                <div class="form-group">
+                                    <input id="images" type="file" class="form-control" style="height: 35px;" accept="image/png, image/jpeg, image/gif" multiple>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setMedia();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- writeReviewModal -->
+        <div class="modal fade" id="writeReviewModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">리뷰 작성</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p class="text-dark">
+                            관리자 권한으로 리뷰 생성
+                        </p>
+                        <div class="form-group">
+                            <label for="reviewer">리뷰 작성자</label>
+                            <input type="text" class="form-control" id="reviewer" placeholder="작성자 이름을 생성해주세요.">
+                        </div>
+                        <div class="form-group d-flex align-items-start">
+                            <div class="rating-section mr-3" style="width: 200px;">
+                                <label>별점</label>
+                                <div class="rating-options" style="font-size: 14px;">
+                                    <div class="mb-1">
+                                        <a href="#" class="star" onclick="setStar(1);">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            (1점)
+                                        </a>
+                                    </div>
+                                    <div class="mb-1">
+                                        <a href="#" class="star" onclick="setStar(2);">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            (2점)
+                                        </a>
+                                    </div>
+                                    <div class="mb-1">
+                                        <a href="#" class="star" onclick="setStar(3);">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            (3점)
+                                        </a>
+                                    </div>
+                                    <div class="mb-1">
+                                        <a href="#" class="star" onclick="setStar(4);">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star"></i>
+                                            (4점)
+                                        </a>
+                                    </div>
+                                    <div class="mb-1">
+                                        <a href="#" class="star" onclick="setStar(5);">
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            <i class="fa fa-star text-warning"></i>
+                                            (5점)
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="review-section" style="width: calc(100% - 200px);">
+                                <label for="reviewContent">리뷰 내용</label>
+                                <textarea class="form-control" id="reviewContent" style="height: 140px;"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setReview();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountPassword -->
+        <div class="modal fade" id="accountPassword" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">비밀번호 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>새 비밀번호</label> <small id="passwordConfirmText"></small>
+                            <input type="password" class="form-control" id="password">
+                        </div>
+                        <div class="form-group">
+                            <label>새 비밀번호 확인</label> <small id="passwordCheckConfirmText"></small>
+                            <input type="password" class="form-control" id="passwordCheck">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setPassword();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountNickname -->
+        <div class="modal fade" id="accountNickname" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">닉네임 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>닉네임</label> <small id="nicknameConfirmText"></small>
+                            <input type="text" class="form-control" id="nickname" value="{{counselor.nickname}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setNickname();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountTel -->
+        <div class="modal fade" id="accountTel" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">연락처 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>연락처</label> <small id="telConfirmText"></small>
+                            <input type="text" class="form-control" id="tel" value="{{counselor.tel}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setTel();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountEmail -->
+        <div class="modal fade" id="accountEmail" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">이메일 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>이메일</label> <small id="emailConfirmText"></small>
+                            <input type="text" class="form-control" id="email" value="{{counselor.email}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setEmail();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountAddress -->
+        <div class="modal fade" id="accountAddress" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">주소 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>주소</label> <small id="addressConfirmText"></small>
+                            <input type="text" class="form-control" id="address" value="{{counselor.address}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setAddress();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountWeight -->
+        <div class="modal fade" id="accountWeight" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">검색 가중치 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>검색 가중치</label> <small id="weightConfirmText"></small>
+                            <input type="number" class="form-control" id="weight" value="{{counselor.weight}}">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setWeight();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountIntro -->
+        <div class="modal fade" id="accountIntro" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">짧은 소개 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>짧은 소개</label> <small id="introConfirmText"></small>
+                            <textarea class="form-control" id="intro" rows="5">{{counselor.introduce}}</textarea>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setIntro();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountPoint -->
+        <div class="modal fade" id="accountPoint" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">정산 포인트 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>포인트</label>
+                            <input type="number" class="form-control" id="point" value="{{counselor.point}}">
+                            <small>
+                                정산 및 상담료 지급을 위한 포인트입니다.<br>
+                                수정 시 주의해주세요.
+                            </small>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setPoint();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountStatus -->
+        <div class="modal fade" id="accountStatus" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상태 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>상태</label>
+                            <select class="form-control form-select" id="status">
+                                <option value="online" {% if counselor.status == 'online' %}selected{% endif %}>
+                                    상담가능: 상담 가능한 상태</option>
+                                <option value="busy" {% if counselor.status == 'busy' %}selected{% endif %}>
+                                    상담중: 상담 중인 상태</option>
+                                <option value="offline" {% if counselor.status == 'offline' %}selected{% endif %}>
+                                    오프라인: 상담 불가능한 상태</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setStatus();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountService -->
+        <div class="modal fade" id="accountService" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상담 서비스 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>상담 서비스 활성화</label>
+                            <div class="form-check">
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="saju" {% if 'saju' in counselor.services %}checked{% endif %}>
+                                    <label class="form-check-label" for="saju">
+                                        사주
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="taro" {% if 'taro' in counselor.services %}checked{% endif %}>
+                                    <label class="form-check-label" for="taro">
+                                        타로
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="jum" {% if 'jum' in counselor.services %}checked{% endif %}>
+                                    <label class="form-check-label" for="jum">
+                                        신점
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setService();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- accountCategory -->
+        <div class="modal fade" id="accountCategory" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상담 방식 변경</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>상담 방식 활성화</label>
+                            <div class="form-check">
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="telCategory" {% if 'tel' in counselor.categories %}checked{% endif %}>
+                                    <label class="form-check-label" for="telCategory">
+                                        전화 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="chat" {% if 'chat' in counselor.categories %}checked{% endif %}>
+                                    <label class="form-check-label" for="chat">
+                                        채팅 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="meet" {% if 'meet' in counselor.categories %}checked{% endif %}>
+                                    <label class="form-check-label" for="meet">
+                                        대면 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="cafe" {% if 'cafe' in counselor.categories %}checked{% endif %}>
+                                    <label class="form-check-label" for="cafe">
+                                        카페 상담
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setCategory();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- itemWrite: name, item_service, item_category, description, price -->
+        <div class="modal fade" id="itemWrite" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">상품 등록</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>상품명</label>
+                            <input type="text" class="form-control" id="itemName" placeholder="상품명을 입력해주세요.">
+                        </div>
+                        <div class="form-group">
+                            <label>상품 서비스</label>
+                            <select class="form-control form-select" id="itemService">
+                                <option value="saju" selected>사주</option>
+                                <option value="taro">타로</option>
+                                <option value="jum">신점</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>서비스 제공 방법 선택</label>
+                            <div class="form-check">
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="itemCategoryTel" checked>
+                                    <label class="form-check-label" for="item_category_tel">
+                                        전화 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="itemCategoryChat">
+                                    <label class="form-check-label" for="itemCategoryChat">
+                                        채팅 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="itemCategoryMeet">
+                                    <label class="form-check-label" for="itemCategoryMeet">
+                                        대면 상담
+                                    </label>
+                                </div>
+                                <div class="mb-4">
+                                    <input class="form-check-input" type="checkbox" id="itemCategoryCafe">
+                                    <label class="form-check-label" for="itemCategoryCafe">
+                                        카페 상담
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>상품 가격</label>
+                            <input type="text" class="form-control" id="itemPrice" placeholder="상담: 1000포인트(30초).. 자유롭게 작성">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="setItem();" data-bs-dismiss="modal" aria-label="Close">저장하기</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="/static/_sajutoktok/js/jquery.min.js"></script>
+        <script src="/static/_sajutoktok/js/popper.min.js"></script>
+        <script src="/static/_sajutoktok/js/bootstrap.min.js"></script>
+        <script src="/static/_sajutoktok/js/scrollIt.min.js"></script>
+        <script src="/static/_sajutoktok/js/nav-menu.js"></script>
+        <script src="/static/_sajutoktok/js/easy.responsive.tabs.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.js"></script>
+        <script src="/static/_sajutoktok/js/owl.carousel.thumbs.js"></script>
+        <script src="/static/_sajutoktok/js/animated-headline.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.counterup.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.stellar.min.js"></script>
+        <script src="/static/_sajutoktok/js/waypoints.min.js"></script>
+        <script src="/static/_sajutoktok/js/countdown.js"></script>
+        <script src="/static/_sajutoktok/js/clipboard.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.magnific-popup.min.js"></script>
+        <script src="/static/_sajutoktok/js/isotope.pkgd.min.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.mousewheel.min.js"></script>
+        <script src="/static/_sajutoktok/js/lightgallery-all.js"></script>
+        <script src="/static/_sajutoktok/js/wow.js"></script>
+        <script src="/static/_sajutoktok/js/prism.js"></script>
+        <script src="/static/_sajutoktok/js/xzoom.js"></script>
+        <script src="/static/_sajutoktok/js/jquery.hammer.min.js"></script>
+        <script src="/static/_sajutoktok/js/setup.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax.min.js"></script>
+        <script src="/static/_sajutoktok/js/jarallax-video.js"></script>
+        <script src="/static/_sajutoktok/js/gsap.js"></script>
+        <script src="/static/_sajutoktok/js/scrolltrigger.js"></script>
+        <script src="/static/_sajutoktok/js/splittext.js"></script>
+        <script src="/static/_sajutoktok/js/gsap-animation.js"></script>
+        <script src="/static/_sajutoktok/js/custom.js"></script>
+        <script src="/static/_sajutoktok/js/main.js"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script src="/static/quform/js/plugins.js"></script>
+        <script src="/static/quform/js/scripts.js"></script>
+        <script src="/static/search/search.js"></script>
+        <!-- media -->
+        <script>
+            const preview0Box = document.getElementById("preview0");
+            const preview1Box = document.getElementById("preview1");
+            const preview2Box = document.getElementById("preview2");
+            const preview3Box = document.getElementById("preview3");
+            const preview4Box = document.getElementById("preview4");
+            const preview5Box = document.getElementById("preview5");
+            const imagesInput = document.getElementById("images");
+            const photosInput = document.getElementById("photos");
+            const mediaTypeInput = document.getElementById('mediaType');
+            const multifulImageBox = document.getElementById('multifulImage');
+            const singleImageBox = document.getElementById('singleImage');
+            const imageUploadBox = document.getElementById('imageUpload');
+            const embedCodeBox = document.getElementById('embedCode');
+            const embedInput = document.getElementById('embed');
+            let uploadedFiles = [];
+
+            imagesInput.addEventListener('change', function () {
+                const filesArray = Array.from(imagesInput.files);
+                filesArray.sort((a, b) => a.name.localeCompare(b.name));
+                for (let i = 0; i < 5; i++) {
+                    if (filesArray[i] && checkImage(filesArray[i])) {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                            document.querySelectorAll(`.preview5>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(filesArray[i]);
+                        uploadedFiles.push(filesArray[i]);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            });
+
+            function deleteImage(index) {
+                uploadedFiles.splice(index, 1);
+                for (let i = 0; i < 5; i++) {
+                    if (i < uploadedFiles.length) {
+                        const file = uploadedFiles[i];
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                                el.style.background = `url(${e.target.result}) center/contain no-repeat grey`;
+                            });
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        document.querySelectorAll(`.preview${i}>div>div`).forEach((el) => {
+                            el.style.background = 'url() center/contain no-repeat grey';
+                        });
+                    }
+                }
+            }
+
+            mediaTypeInput.addEventListener('input', () => {
+                const mediaType = mediaTypeInput.value;
+                if (mediaType === 'text') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'single_image') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'block';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'selectable_images') {
+                    multifulImageBox.style.display = 'block';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'carousel_images') {
+                    multifulImageBox.style.display = 'block';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'block';
+                    embedCodeBox.style.display = 'none';
+                } else if (mediaType === 'embed') {
+                    multifulImageBox.style.display = 'none';
+                    singleImageBox.style.display = 'none';
+                    imageUploadBox.style.display = 'none';
+                    embedCodeBox.style.display = 'block';
+                }
+            });
+        </script>
+        <!-- wysiwyg -->
+        <script>
+            document.getElementById('fontSize').addEventListener('change', function() {
+                formatText('fontSize'.value);
+            });
+            function formatText(command) {
+                if (command === 'fontSize') {
+                    document.execCommand('fontSize', false, arguments[1]);
+                } else {
+                    document.execCommand(command, false, null);
+                    const buttonId = command + 'ToggleButton';
+                    const button = document.getElementById(buttonId);
+                    button.classList.toggle('toggle-active');
+                }
+                document.getElementById('content').focus();
+            }
+            document.getElementById('content').addEventListener('paste', function(e) {
+                e.preventDefault();
+                var text = (e.originalEvent || e).clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            });
+        </script>
+        <script>
+            // variables
+            var modifingTable = '';
+            var modifingField = '';
+            var passwordRegex = /^(?=.*[a-zA-Z])(?=.*[0-9]).{6,16}$/;
+            var emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+            var star = 0;
+
+            // functions
+            window.onload = () => {
+                console.log(`Window loaded at ${getNowDt()}`);
+
+                // set price format
+                document.querySelectorAll('.price').forEach((el) => {
+                    el.innerHTML = el.innerHTML.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                });
+            }
+
+            window.addEventListener("message", () => {
+                var message = event.data;
+                if (message == 'reload') {
+                    window.location.reload();
+                }
+            }, false);
+
+            document.querySelectorAll('.star').forEach((el) => {
+                el.addEventListener('click', () => {
+                    document.querySelectorAll('.star').forEach((e) => {
+                        e.setAttribute('class', 'star');
+                    });
+                    el.setAttribute('class', 'star btn btn-primary p-1 px-2');
+                });
+            });
+
+            // 리뷰 별점 수정
+            setStar = (rate) => {
+                star = rate;
+            }
+
+            // 상담가 계정 수정 완료
+            updateComplete = () => {
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">계정 수정 완료</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                상담가 계정 수정이 완료되었습니다.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `success`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+
+            // 계정 숨가가
+            hideCounselor = () => {
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">계정 숨기기</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                상담가 계정을 숨기시겠습니까?<br>
+                                <small class="text-danger">
+                                    숨김: 검색 결과에서 제외되고, 프로필 페이지에 접근이 불가능해집니다.
+                                </small>
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `숨기기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        var formData = new FormData();
+                        formData.append('id', '{{counselor.id}}');
+                        formData.append('status', '3hidden');
+                        fetch('/api/rewrite_account', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        })
+                        .then((response) => response.json())
+                        .then((data) => {
+                            console.log(data);
+                            var success = data['success'];
+                            if (success == 'y') {
+                                updateComplete();
+                            }
+                        });
+                    }
+                });
+            }
+
+            // 좋아요 추가 또는 제거
+            addLike = async () => {
+                await fetch('/api/add_like?counselor_id={{counselor.id}}');
+                window.location.reload();
+            }
+
+            dislike = async () => {
+                await fetch('/api/dislike?counselor_id={{counselor.id}}');
+                window.location.reload();
+            }
+
+            // 비밀번호 변경
+            document.getElementById('password').addEventListener('input', () => {
+                var password = document.getElementById('password').value;
+                if (passwordRegex.test(password)) {
+                    document.getElementById('passwordConfirmText').innerHTML = '사용 가능한 비밀번호입니다.';
+                    document.getElementById('passwordConfirmText').style.color = '#198754';
+                } else {
+                    document.getElementById('passwordConfirmText').innerHTML = '비밀번호는 영문, 숫자를 포함한 8~16자여야 합니다.';
+                    document.getElementById('passwordConfirmText').style.color = '#dc3545';
+                }
+            });
+
+            document.getElementById('passwordCheck').addEventListener('input', () => {
+                var password = document.getElementById('password').value;
+                var passwordConfirm = document.getElementById('passwordCheck').value;
+                if (password == passwordConfirm) {
+                    document.getElementById('passwordCheckConfirmText').innerHTML = '비밀번호가 일치합니다.';
+                    document.getElementById('passwordCheckConfirmText').style.color = '#198754';
+                } else {
+                    document.getElementById('passwordCheckConfirmText').innerHTML = '비밀번호가 일치하지 않습니다.';
+                    document.getElementById('passwordCheckConfirmText').style.color = '#dc3545';
+                }
+            });
+
+            setPassword = async () => {
+                var password = document.getElementById('password').value;
+                var passwordCheck = document.getElementById('passwordCheck').value;
+
+                if (password != passwordCheck) {
+                    Swal.fire({
+                        html: `
+                        <div>
+                            <div class="text-center py-4">
+                                <h1 class="text-dark">비밀번호 변경</h1>
+                            </div>
+                            <diV class="text-start">
+                                <p class="text-secondary">
+                                    비밀번호가 일치하지 않습니다.
+                                </p>
+                            </div>
+                        </div>`,
+                        icon: `error`,
+                        showConfirmButton: true,
+                        confirmButtonText: `확인`,
+                        showCancelButton: false,
+                        cancelButtonText: ``,
+                    });
+                    return;
+                }
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('password', password);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+
+                    updateComplete();
+                });
+            }
+
+            // 프로필 이미지 수정
+            setMedia = async () => {
+                var filePaths = '';
+                for (let file of uploadedFiles) {
+                    try {
+                        var filePathString = await uploadFile(file);
+                        filePaths += filePathString + ',';
+                    } catch (error) {
+                        console.error("File upload failed:", error);
+                    }
+                }
+                if (filePaths.length > 0) {
+                    filePaths = filePaths.slice(0, -1);
+                }
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('photo', filePaths);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    updateComplete();
+                });
+            }
+
+            // 닉네임 수정
+            var nicknameOk = false;
+            document.getElementById('nickname').addEventListener('input', async () => {
+                var nicknameInput = document.getElementById('nickname');
+                if (nicknameInput.value.length > 0 && nicknameInput.value.length <= 20) {
+                    var formData = new FormData();
+                    formData.append('nickname', nicknameInput.value);
+                    await fetch('/api/check_nickname', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    }).then(async (response) => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        var success = data['success'];
+
+                        if (success == 'y') {
+                            document.getElementById('nicknameConfirmText').innerHTML = '사용 가능한 닉네임입니다.';
+                            document.getElementById('nicknameConfirmText').style.color = '#198754';
+                            nicknameOk = true;
+                        } else {
+                            document.getElementById('nicknameConfirmText').innerHTML = '이미 사용 중인 닉네임입니다.';
+                            document.getElementById('nicknameConfirmText').style.color = '#dc3545';
+                            nicknameOk = false;
+                        }
+                    });
+                } else {
+                    document.getElementById('nicknameConfirmText').innerHTML = '닉네임은 1~20글자여야 합니다.';
+                    document.getElementById('nicknameConfirmText').style.color = '#dc3545';
+                    nicknameOk = false;
+                }
+            });
+
+            setNickname = async () => {
+                if (nicknameOk) {
+                    var nickname = document.getElementById('nickname').value;
+
+                    var formData = new FormData();
+                    formData.append('id', '{{counselor.id}}');
+                    formData.append('nickname', nickname);
+                    await fetch('/api/rewrite_account', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var success = data['success'];
+                        console.log(success);
+                        if (success == 'y') {
+                            updateComplete();
+                        }
+                    });
+                }
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">닉네임 변경</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용 가능한 닉네임을 입력해주세요.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `error`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                });
+            }
+
+            // 연락처 수정
+            var telOk = false;
+            document.getElementById('tel').addEventListener('input', async () => {
+                var telInput = document.getElementById('tel');
+                if (telInput.value.length == 11 || telInput.value.length == 10) {
+                    var formData = new FormData();
+                    formData.append('tel', telInput.value);
+                    await fetch('/api/check_tel', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    }).then(async (response) => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        var success = data['success'];
+
+                        if (success == 'y') {
+                            document.getElementById('telConfirmText').innerHTML = '사용 가능한 연락처입니다.';
+                            document.getElementById('telConfirmText').style.color = '#198754';
+                            telOk = true;
+                        } else {
+                            document.getElementById('telConfirmText').innerHTML = '이미 사용 중인 연락처입니다.';
+                            document.getElementById('telConfirmText').style.color = '#dc3545';
+                            telOk = false;
+                        }
+                    });
+                } else {
+                    document.getElementById('telConfirmText').innerHTML = '연락처는 10~11글자여야 합니다.';
+                    document.getElementById('telConfirmText').style.color = '#dc3545';
+                    telOk = false;
+                }
+            });
+
+            setTel = async () => {
+                if (telOk) {
+                    var tel = document.getElementById('tel').value;
+
+                    var formData = new FormData();
+                    formData.append('id', '{{counselor.id}}');
+                    formData.append('tel', tel);
+                    await fetch('/api/rewrite_account', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var success = data['success'];
+                        console.log(success);
+                        if (success == 'y') {
+                            updateComplete();
+                        }
+                    });
+                }
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">연락처 변경</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용 가능한 연락처를 입력해주세요.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `error`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                });
+            }
+
+            // 이메일 수정
+            var emailOk = false;
+            document.getElementById('email').addEventListener('input', async () => {
+                var emailInput = document.getElementById('email');
+                if (emailRegex.test(emailInput.value)) {
+                    var formData = new FormData();
+                    formData.append('id', emailInput.value);
+                    await fetch('/api/check_id', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    }).then(async (response) => response.json())
+                    .then(async (data) => {
+                        console.log(data);
+                        var success = data['success'];
+
+                        if (success == 'y') {
+                            document.getElementById('emailConfirmText').innerHTML = '사용 가능한 이메일입니다.';
+                            document.getElementById('emailConfirmText').style.color = '#198754';
+                            emailOk = true;
+                        } else {
+                            document.getElementById('emailConfirmText').innerHTML = '이미 사용 중인 이메일입니다.';
+                            document.getElementById('emailConfirmText').style.color = '#dc3545';
+                            emailOk = false;
+                        }
+                    });
+                } else {
+                    document.getElementById('emailConfirmText').innerHTML = '이메일 형식에 맞게 입력해주세요.';
+                    document.getElementById('emailConfirmText').style.color = '#dc3545';
+                    emailOk = false;
+                }
+            });
+
+            setEmail = async () => {
+                if (emailOk) {
+                    var email = document.getElementById('email').value;
+
+                    var formData = new FormData();
+                    formData.append('id', '{{counselor.id}}');
+                    formData.append('email', email);
+                    await fetch('/api/rewrite_account', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRFToken': csrftoken
+                        }
+                    })
+                    .then(async (response) => response.json())
+                    .then(async (data) => {
+                        var success = data['success'];
+                        console.log(success);
+                        if (success == 'y') {
+                            updateComplete();
+                        }
+                    });
+                }
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">이메일 변경</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                사용 가능한 이메일을 입력해주세요.
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `error`,
+                    showConfirmButton: true,
+                    confirmButtonText: `확인`,
+                    showCancelButton: false,
+                    cancelButtonText: ``,
+                });
+            }
+
+            // 상담사 주소
+            setAddress = async () => {
+                var address = document.getElementById('address').value;
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('address', address);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상담사 소개 수정(짧은 소개)
+            setIntro = async () => {
+                var intro = document.getElementById('intro').value;
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('introduce', intro);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상담사 소개 수정(긴 소개)
+            setWysiwyg = async () => {
+                var content = document.getElementById('content').innerHTML;
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('detail', content);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상담가 상태 변경
+            setStatus = async () => {
+                var status = document.getElementById('status').value;
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('status', status);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상담가 서비스 변경
+            setService = async () => {
+                var isTaro = document.getElementById('taro').checked;
+                var isJum = document.getElementById('jum').checked;
+                var isSaju = document.getElementById('saju').checked;
+                var services = '';
+                if (isTaro) {
+                    services += 'taro,';
+                }
+                if (isJum) {
+                    services += 'jum,';
+                }
+                if (isSaju) {
+                    services += 'saju,';
+                }
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('services', services);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상담가 방식 수정
+            setCategory = async () => {
+                var isTel = document.getElementById('telCategory').checked;
+                var isChat = document.getElementById('chat').checked;
+                var isMeet = document.getElementById('meet').checked;
+                var isCafe = document.getElementById('cafe').checked;
+                var categories = '';
+                if (isTel) {
+                    categories += 'tel,';
+                }
+                if (isChat) {
+                    categories += 'chat,';
+                }
+                if (isMeet) {
+                    categories += 'meet,';
+                }
+                if (isCafe) {
+                    categories += 'cafe,';
+                }
+
+                var formData = new FormData();
+                formData.append('id', '{{counselor.id}}');
+                formData.append('categories', categories);
+                await fetch('/api/rewrite_account', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    }
+                })
+                .then(async (response) => response.json())
+                .then(async (data) => {
+                    var success = data['success'];
+                    console.log(success);
+                    if (success == 'y') {
+                        updateComplete();
+                    }
+                });
+            }
+
+            // 상품 생성
+            setItem = async () => {
+                var itemName = document.getElementById('itemName').value;
+                var itemPrice = document.getElementById('itemPrice').value;
+                var itemService = document.getElementById('itemService').value;
+                var isItemCategoryTel = document.getElementById('itemCategoryTel').checked;
+                var isItemCategoryChat = document.getElementById('itemCategoryChat').checked;
+                var isItemCategoryMeet = document.getElementById('itemCategoryMeet').checked;
+                var isItemCategoryCafe = document.getElementById('itemCategoryCafe').checked;
+                var itemCategories = '';
+                if (isItemCategoryTel) {
+                    itemCategories += 'tel,';
+                }
+                if (isItemCategoryChat) {
+                    itemCategories += 'chat,';
+                }
+                if (isItemCategoryMeet) {
+                    itemCategories += 'meet,';
+                }
+                if (isItemCategoryCafe) {
+                    itemCategories += 'cafe,';
+                }
+
+                await setData({
+                    model: 'ITEM',
+                    id: '',
+                    field_value: JSON.stringify({
+                        name: itemName,
+                        item_service: itemService,
+                        item_category: itemCategories,
+                        provider_id: '{{counselor.id}}',
+                        price: itemPrice,
+                    })
+                }).then(() => {
+                    window.location.reload();
+                });
+            }
+
+            // 리뷰 작성
+            setReviewStar = (star) => {
+                reviewStar = star;
+                document.querySelectorAll('.reviewStar').forEach((el) => {
+                    el.classList.remove('btn-primary');
+                    el.classList.add('btn-light');
+                    el.style.fontSize = '13px';
+                });
+                document.getElementById(`reviewStar${star}`).classList.remove('btn-light');
+                document.getElementById(`reviewStar${star}`).classList.add('btn-primary');
+                document.getElementById(`reviewStar${star}`).style.fontSize = '17px';
+            }
+
+            setReview = () => {
+                var reviewContent = document.getElementById('reviewContent').value;
+                var reviewer = document.getElementById('reviewer').value;
+
+                Swal.fire({
+                    html: `
+                    <div>
+                        <div class="text-center py-4">
+                            <h1 class="text-dark">리뷰 작성</h1>
+                        </div>
+                        <diV class="text-start">
+                            <p class="text-secondary">
+                                관리자 권한으로 리뷰를 작성하시겠습니까?
+                            </p>
+                        </div>
+                    </div>`,
+                    icon: `warning`,
+                    showConfirmButton: true,
+                    confirmButtonText: `작성하기`,
+                    showCancelButton: true,
+                    cancelButtonText: `취소`,
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        var formData = new FormData();
+                        formData.append('account_id', reviewer);
+                        formData.append('counselor_id', '{{counselor.id}}');
+                        formData.append('star', star);
+                        formData.append('content', reviewContent);
+                        await fetch('/api/write_review', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            }
+                        })
+                        .then(async (response) => response.json())
+                        .then(async (data) => {
+                            var success = data['success'];
+                            console.log(success);
+                            if (success == 'y') {
+                                Swal.fire({
+                                    html: `
+                                    <div>
+                                        <div class="text-center py-4">
+                                            <h1 class="text-dark">리뷰 작성</h1>
+                                        </div>
+                                        <diV class="text-start">
+                                            <p class="text-secondary">
+                                                리뷰가 작성되었습니다.
+                                            </p>
+                                        </div>
+                                    </div>`,
+                                    icon: `success`,
+                                    showConfirmButton: true,
+                                    confirmButtonText: `확인`,
+                                    showCancelButton: false,
+                                    cancelButtonText: ``,
+                                }).then(() => window.location.reload());
+                            }
+                        });
+                    }
+                });
+            }
+
+        </script>
+
+    </body>
+
+</html>
