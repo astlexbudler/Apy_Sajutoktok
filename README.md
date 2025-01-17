@@ -10,6 +10,14 @@ Django와 Flutter를 이용해서 제작한 사주톡톡 사주 상담 서비스
 사주톡톡은 사용자, 사주 상담가, 관리자 계정으로 구분되는 계정 구조를 가지는 사주 상담을 지원하는 서비스입니다. 채팅, 외부 전화 연결 API를 이용한 전화 상담, 대면 상담을 서비스를 제공하며, 이메일 자동 발송 기능과 푸시 알림 기능을 포함합니다.
 Django를 이용합 웹으로 먼저 제작한 뒤, Fluuter Webview를 이용한 앱으로도 제작하고 배포할 예정입니다.
 
+### 프로젝트 실행 방법
+
+1. Django/{project_name} 디렉토리로 이동합니다.
+2. 가상환경을 생성하고 실행합니다.
+3. OS에 따라서 Win 기반 OS의 경우 init.ps1(PowerShell)을 실행합니다. Linux 기반 OS의 경우 init.sh를 실행합니다. requirements와 migration 및 초기 필요한 데이터가 자동으로 구성됩니다.
+4. python manage.py runserver 또는 python3 manage.py runserver 명령어를 이용하여 Django 프로젝트를 실행할 수 있습니다.
+5. 데이터베이스 초기화 시 다시 init 파일을 실행하여 초기 상태로 되돌릴 수 있습니다. 작성된 코드는 복구되지 않습니다.
+
 ---
 
 ## 주의
