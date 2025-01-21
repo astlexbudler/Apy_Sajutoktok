@@ -33,7 +33,10 @@ Django를 이용합 웹으로 먼저 제작한 뒤, Fluuter Webview를 이용한
 - **app_core**:  
 프로젝트의 기본 설정과 관련된 앱. 사전 설정 데이터 생성 및 스케줄러, 앱 초기화 시 기존 사주 상담가 정보 불러오기 수행. 기본적인 설정과 관련된 내용이 정의되어있습니다.
   - MODEL:
-UPLOAD(업로드된 파일), CERT_CODE(인증 코드), SERVER_SETTING(서버 설정값), SERVER_LOG(서버 로그 메세지)
+UPLOAD(업로드된 파일)
+- 
+
+, CERT_CODE(인증 코드), SERVER_SETTING(서버 설정값), SERVER_LOG(서버 로그 메세지)
 - **app_api**:  
 API 요청 주소와 해당 요청에 대한 처리가 정의되어있는 앱. 별도로 정의된 테이블은 없습니다.  
 060, 페이레터 및 SNS API 요청 등 외부 API를 이용하는 코드 또한 이 앱에 정의되어있습니다.
@@ -43,6 +46,7 @@ API 요청 주소와 해당 요청에 대한 처리가 정의되어있는 앱. �
 SajutoktokAccount(계정), PURCHASE(결제 기록)
   - PATH:  
 /(메인 페이지)  
+/404(404페이지)
 /login(로그인 요청 페이지)  
 /login_kakao(카카오 로그인 처리 페이지)  
 /login_naver(네이버 로그인 처리 페이지)  
@@ -50,11 +54,11 @@ SajutoktokAccount(계정), PURCHASE(결제 기록)
 /register(회원가입 페이지)  
 /forgot_cert(회원 정보 찾기 인증 페이지)  
 /forgot_reset(계정 이메일 확인 및 비밀번호 초기화 페이지)  
-/profile_user(사용자 프로필 페이지)  
+/profile(사용자 프로필 페이지)  
 /bookmark(사용자가 북마크한 상담가 페이지)  
 /point_shop(사주 포인트 충전 페이지)  
 /point_purchase(사주 포인트 충전 결제 페이지)  
-/purchase(결제 기록 확인 페이지)  
+/purchases(결제 기록 확인 페이지)  
 /contact(관리자 정보 페이지)  
 /terms(이용약관 페이지)
 - **app_counselor**:  
@@ -62,9 +66,26 @@ SajutoktokAccount(계정), PURCHASE(결제 기록)
   - MODEL:  
 COUNSELOR_ITEM(상담 상품), REVIEW(사주 상담가 리뷰)
   - PATH:  
-/counselor(사주 상담가 프로필 페이지)  
-/counselor/reviews(사주 상담가 리뷰 또는 전체 상담가 리뷰 페이지)  
-/counselor/purchase(사주 서비스 결제 기록)
+/counselor(사주 상담가 검색 페이지)
+/counselor/view(사주 상담가 상세 페이지)
+/counselor/purchase(사주 상담가 서비스 결제 페이지)
+/counselor/profile(사주 상담가 프로필 관리 페이지)
+- **app_board**:  
+게시글 앱. 게시글 관련 요청과 그 처리가 정의되어있는 앱.  
+  - MODEL:  
+POST(게시글), COMMENT(댓글)
+  - PATH:  
+/board(게시판 페이지)
+/board/post(게시글 페이지)
+/board/write(게시글 작성 페이지)
+/board/rewrite(게시글 수정 페이지)
+- **app_message**:  
+메세징 앱. 채팅 및 알림 메세지에 대한 요청과 그 처리가 정의되어있는 앱.  
+  - MODEL:  
+CHAT(채팅), NOTIFICATION(알림 메시지)
+  - PATH:  
+/chat(채팅 목록 페이지)  
+/chat/dm(채팅 페이지)
 - **app_supervisor**:  
 사이트 관리자 앱. 사이트 관리자를 위한 페이지들과 그 요청에 대한 처리가 정의되어있는 앱.  
   - MODEL:  
@@ -73,26 +94,11 @@ POINT_ITEM(사주 포인트 충전 상품)
 /supervisor(사이트 관리자 메뉴 페이지)  
 /supervisor/user(사용자 계정 페이지)  
 /supervisor/counselor(사주 상담가 계정 페이지)  
-/supervisor/point_item(사주 포인트 충전 상품 관리 페이지)  
+/supervisor/point_shop(사주 포인트 충전 상품 관리 페이지)  
 /supervisor/purchase(결제 기록 확인 페이지)  
 /supervisor/send_push(푸시 메시지 발송 페이지)
-- **app_post**:  
-게시글 앱. 게시글 관련 요청과 그 처리가 정의되어있는 앱.  
-  - MODEL:  
-POST(게시글), COMMENT(댓글)
-  - PATH:  
-/post(게시글 상세 페이지)  
-/post/notices(공지사항들 페이지)  
-/post/events(이벤트들 페이지)  
-/post/qnas(문의들 페이지)  
-/post/blogs(블로그들 페이지)
-- **app_message**:  
-메세징 앱. 채팅 및 알림 메세지에 대한 요청과 그 처리가 정의되어있는 앱.  
-  - MODEL:  
-CHAT(채팅), EMOJI(채팅 이모티콘), NOTIFICATION(알림 메시지)
-  - PATH:  
-/chat(채팅방 페이지)  
-/chat/list(채팅방 리스트 페이지)
+/supervisor/chat(채팅 관리 페이지)
+/supervisor/server_setting(서버 설정 페이지)
 
 ---
 
